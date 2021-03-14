@@ -5,7 +5,6 @@ import createError from 'http-errors';
 import cookieParser from 'cookie-parser';
 
 import authRouter from './routes/auth';
-import postsRouter from './routes/posts';
 import cloudinaryRoutes from './routes/cloudinary';
 import userRouter from './routes/user';
 import projectsRouter from './routes/projects';
@@ -19,7 +18,6 @@ app.use(cors());
 app.use(cookieParser());
 
 app.use('/api/auth', authRouter);
-app.use('/api/', postsRouter);
 app.use('/api/', projectsRouter);
 app.use('/api/', phasesRouter);
 app.use('/api/', userRouter);

@@ -8,6 +8,10 @@ const phaseSchema = new Schema(
       type: String,
       required: true
     },
+    deliverables: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Deliverable'
+    }],
     status: {
       type: String,
       default: 'incomplete'
