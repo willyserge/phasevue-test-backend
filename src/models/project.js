@@ -8,6 +8,10 @@ const projectSchema = new Schema(
       type: String,
       required: true
     },
+    phases: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Phase'
+    }],
     slug: {
       type: String,
       trim: true,

@@ -11,10 +11,6 @@ const phaseSchema = new Schema(
     status: {
       type: String,
       default: 'incomplete'
-    },
-    belongsTo: {
-      type: Schema.Types.ObjectId,
-      ref: 'Project'
     }
   },
   {
