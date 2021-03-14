@@ -10,10 +10,9 @@ const Phases = {
   },
   createPhase(req, res) {
     req.body.name.forEach(async (element) => {
-      const newPhase = new Phase({ name: element });
+      const newPhase = new Phase({ name: element, belongsTo: req.body.belongsTo });
       const phase = await newPhase.save();
       console.log(phase)
-      
     });
     return res.status(201).json('project created');
     // const newTemplate = new Template(req.body);

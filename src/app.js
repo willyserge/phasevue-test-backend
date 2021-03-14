@@ -9,6 +9,7 @@ import postsRouter from './routes/posts';
 import cloudinaryRoutes from './routes/cloudinary';
 import userRouter from './routes/user';
 import projectsRouter from './routes/projects';
+import phasesRouter from './routes/phase';
 
 
 const app = express();
@@ -20,8 +21,10 @@ app.use(cookieParser());
 app.use('/api/auth', authRouter);
 app.use('/api/', postsRouter);
 app.use('/api/', projectsRouter);
+app.use('/api/', phasesRouter);
 app.use('/api/', userRouter);
 app.use('/api/cloudinary', cloudinaryRoutes);
+
 
 app.get('/', (req, res) => {
   res.status(200).send({

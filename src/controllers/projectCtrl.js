@@ -6,13 +6,12 @@ import User from '../models/user';
 const Projects = {
 
   async getAllProjects(req, res) {
-    const projects = await Project.find().sort({ createdAt: -1 });
-    console.log(req.user)
+    const projects = await Project.find({ createdBy: req.user.id }).sort({ createdAt: -1 });
     res.status(200).json(projects);
   },
 
   async createProject(req, res) {
-    req.body.slug = slugify(req.body.project[0].name);
+    req.body.slug = slugify(req.body.name);
     const newProject = new Project(req.body);
     newProject.createdBy = req.user.id;
     const project = await newProject.save();

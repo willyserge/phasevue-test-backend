@@ -1,11 +1,11 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const { ObjectId } = mongoose.Schema;
 
-const projectSchema = new mongoose.Schema(
+const projectSchema = new Schema(
   {
-    project: {
-      type: Array,
+    name: {
+      type: String,
       required: true
     },
     slug: {
