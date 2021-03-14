@@ -10,6 +10,11 @@ const Projects = {
     res.status(200).json(projects);
   },
 
+  async getOneProject(req, res) {
+    const project = await Project.find({ _id: req.params.projectId }).populate('phases').sort({ createdAt: -1 });
+    res.status(200).json(project);
+  },
+
   async createProject(req, res) {
     req.body.slug = slugify(req.body.name);
     const newProject = new Project(req.body);

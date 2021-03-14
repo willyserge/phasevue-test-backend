@@ -9,6 +9,7 @@ import Validate from '../middleware/validator';
 const projectsRouter = express.Router();
 
 projectsRouter.get('/projects', auth, AsyncHandler(Projects.getAllProjects));
+projectsRouter.get('/project/:projectId', auth, AsyncHandler(Projects.getOneProject));
 projectsRouter.post('/projects/create', auth, AsyncHandler(Projects.createProject));
 
 export default projectsRouter;

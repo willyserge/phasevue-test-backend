@@ -5,10 +5,6 @@ import User from '../models/user';
 
 const Phases = {
 
-  async getAllPhases(req, res) {
-    const phases = await Phase.find().sort({ createdOn: 'asc' });
-    res.status(200).json(phases);
-  },
   createPhase(req, res) {
     req.body.name.forEach(async (element) => {
       const newPhase = new Phase({ name: element });
