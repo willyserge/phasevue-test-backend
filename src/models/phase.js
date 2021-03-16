@@ -12,6 +12,10 @@ const phaseSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Deliverable'
     }],
+    images: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Image'
+    }],
     status: {
       type: String,
       default: 'incomplete'

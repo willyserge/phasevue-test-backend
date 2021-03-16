@@ -1,12 +1,16 @@
 import mongoose, { Schema } from 'mongoose';
 
-const { ObjectId } = mongoose.Schema;
-
 const deliverableSchema = new Schema(
   {
     body: {
       type: String,
       required: true
+    },
+    slug: {
+      type: String,
+      trim: true,
+      required: true,
+      text: true
     },
     comments: [{
       type: Schema.Types.ObjectId,
