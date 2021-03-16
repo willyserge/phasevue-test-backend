@@ -4,7 +4,7 @@ const { ObjectId } = mongoose.Schema;
 
 const commentSchema = new Schema(
   {
-    description: {
+    body: {
       type: String,
       required: true
     },

@@ -4,7 +4,7 @@ const { ObjectId } = mongoose.Schema;
 
 const deliverableSchema = new Schema(
   {
-    description: {
+    body: {
       type: String,
       required: true
     },
