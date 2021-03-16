@@ -5,12 +5,10 @@ import Deliverables from '../controllers/deliverablectrl';
 import auth from '../middleware/auth';
 import Validate from '../middleware/validator';
 
-
 const deliverableRouter = express.Router();
 
-
-deliverableRouter.get('/phases', AsyncHandler(Deliverables.getPhaseDeliverables));
-deliverableRouter.post('/project/:projectId', AsyncHandler(Deliverables.createDeliverable));
+deliverableRouter.get('/phases/deliverables', AsyncHandler(Deliverables.getPhaseDeliverables));
+deliverableRouter.post('/deliverable/', AsyncHandler(Deliverables.createDeliverable));
 
 
 export default deliverableRouter;
