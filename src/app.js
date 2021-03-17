@@ -16,7 +16,25 @@ import commentRouter from './routes/comment';
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+
+const whitelist = [process.env.CLIENT_URL];
+
+const corsOptions = {
+  origin(origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  allowedHeaders: ['sessionId', 'Content-Type'],
+  exposedHeaders: ['sessionId'],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false
+};
+
+app.use(cors(corsOptions));
 app.use(cookieParser());
 
 app.use('/api/auth', authRouter);
