@@ -6,12 +6,6 @@ const deliverableSchema = new Schema(
       type: String,
       required: true
     },
-    slug: {
-      type: String,
-      trim: true,
-      required: true,
-      text: true
-    },
     comments: [{
       type: Schema.Types.ObjectId,
       ref: 'Comment'

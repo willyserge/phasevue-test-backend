@@ -10,7 +10,7 @@ const phaseRouter = express.Router();
 
 
 phaseRouter.get('/phases', AsyncHandler(Phases.getAllPhases));
-phaseRouter.post('/project/:projectId', AsyncHandler(Phases.createPhase));
+phaseRouter.post('/project/phase/:projectId', AsyncHandler(Phases.createPhase));
 
 
 export default phaseRouter;

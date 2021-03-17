@@ -7,7 +7,7 @@ import Validate from '../middleware/validator';
 
 const deliverableRouter = express.Router();
 
-deliverableRouter.get('/phases/deliverables', AsyncHandler(Deliverables.getPhaseDeliverables));
+deliverableRouter.post('/phase/deliverables', AsyncHandler(Deliverables.getPhaseDeliverables));
 deliverableRouter.post('/deliverable/', AsyncHandler(Deliverables.createDeliverable));
 
 

@@ -5,18 +5,17 @@ import User from '../models/user';
 
 const Phases = {
 
-  createPhase(req, res) {
-    req.body.name.forEach(async (element) => {
-      const newPhase = new Phase({ name: element });
+  async createPhase(req, res) {
+    const element = req.body.name;
+    for (let i = 0; i < element.length; i++) {
+      const newPhase = new Phase({ name: element[i] });
       const phase = await newPhase.save();
-      const project = await Project.findOneAndUpdate({ _id: req.params.projectId }, { $push: { phases: phase._id } }, { new: true });
-      console.log(project)
-    });
-    return res.status(201).json('project created');
-    // const newTemplate = new Template(req.body);
-
-    // const template = await newTemplate.save();
-    // return res.status(201).json(template);
+      const project = await Project.findOneAndUpdate(
+        { _id: req.params.projectId }, { $push: { phases: phase._id } }, { new: true }
+      );
+      
+    }
+    res.status(201).json('phases created successfully')
   }
 
 };

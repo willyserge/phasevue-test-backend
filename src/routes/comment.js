@@ -10,7 +10,7 @@ const commentRouter = express.Router();
 
 
 commentRouter.get('/deliverable/comments', AsyncHandler(Comments.getDeliverableComments));
-commentRouter.post('/deliverable/comment', AsyncHandler(Comments.createComments));
+commentRouter.post('/deliverable/comment', auth, AsyncHandler(Comments.createComments));
 
 
 export default commentRouter;
