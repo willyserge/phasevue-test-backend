@@ -10,6 +10,7 @@ const Comments = {
   },
 
   async createComments(req, res) {
+    req.body.commenter = req.user._id;
     const newComment = new Comment(req.body);
     const comment = await newComment.save();
     const DeliverableComment = await Deliverable.findOneAndUpdate(

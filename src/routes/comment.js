@@ -9,7 +9,7 @@ import Validate from '../middleware/validator';
 const commentRouter = express.Router();
 
 
-commentRouter.get('/deliverable/comments', AsyncHandler(Comments.getDeliverableComments));
+commentRouter.post('/deliverable/comments', AsyncHandler(Comments.getDeliverableComments));
 commentRouter.post('/deliverable/comment', auth, AsyncHandler(Comments.createComments));
 
 
