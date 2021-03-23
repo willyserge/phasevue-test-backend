@@ -13,7 +13,8 @@ const projectSchema = new Schema(
       ref: 'Phase'
     }],
     members: {
-      type: Array
+      type: Array,
+      required: true
     },
     slug: {
       type: String,

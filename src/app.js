@@ -11,6 +11,7 @@ import projectsRouter from './routes/projects';
 import phasesRouter from './routes/phase';
 import deliverableRouter from './routes/deliverable';
 import commentRouter from './routes/comment';
+import templatesRouter from './routes/template';
 
 
 const app = express();
@@ -39,6 +40,7 @@ app.use(cookieParser());
 
 app.use('/api/auth', authRouter);
 app.use('/api/', projectsRouter);
+app.use('/api/template', templatesRouter);
 app.use('/api/', phasesRouter);
 app.use('/api/', deliverableRouter);
 app.use('/api/', commentRouter);

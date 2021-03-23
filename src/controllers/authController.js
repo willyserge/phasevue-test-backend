@@ -17,7 +17,7 @@ const Auth = {
     const newUser = new User({ name, email, password: passwordHash });
 
     await newUser.save();
-    const accessToken = createAccessToken({ id: newUser._id });
+    const accessToken = createAccessToken({ id: newUser._id, email: newUser.email });
     return res.status(201).send({ accessToken });
   },
 
@@ -31,7 +31,7 @@ const Auth = {
     if (!isMatch) return res.status(400).send({ msg: 'Incorrect password.' });
 
     // If login success , create access token and cookie
-    const accessToken = createAccessToken({ id: user._id });
+    const accessToken = createAccessToken({ id: user._id, email: user.email });
     res.cookie('jwt', accessToken, { httpOnly: true, maxAge });
     return res.status(200).send({ accessToken });
   },
