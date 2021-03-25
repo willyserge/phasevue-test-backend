@@ -2,6 +2,10 @@ import mongoose, { Schema } from 'mongoose';
 
 const deliverableSchema = new Schema(
   {
+    title: {
+      type: String,
+      required: true
+    },
     body: {
       type: String,
       required: true

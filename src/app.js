@@ -18,7 +18,7 @@ const app = express();
 
 app.use(express.json());
 
-const whitelist = [process.env.CLIENT_URL, process.env.CLIENT_URL_TWO];
+const whitelist = [process.env.CLIENT_URL, process.env.CLIENT_URL_TWO, process.env.CLIENT_URL_THREE];
 
 const corsOptions = {
   origin(origin, callback) {

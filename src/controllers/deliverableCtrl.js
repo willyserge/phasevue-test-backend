@@ -14,10 +14,11 @@ const Deliverables = {
   async createDeliverable(req, res) {
     const newDeliverable = new Deliverable(req.body);
     const deliverable = await newDeliverable.save();
-    const phaseDeliverable = await Phase.findOneAndUpdate(
+
+    await Phase.findOneAndUpdate(
       { _id: req.body.id }, { $push: { deliverables: deliverable._id } }, { new: true }
     );
-    return res.status(201).json(phaseDeliverable);
+    return res.status(201).json(deliverable);
   }
 };
 

@@ -7,7 +7,7 @@ const UserController = {
   },
 
   async userInfo(req, res) {
-    const user = await User.findById(req.params.id).select('-password');
+    const user = await User.findById(req.user.id).select('-password');
     res.status(200).json(user);
   },
 
