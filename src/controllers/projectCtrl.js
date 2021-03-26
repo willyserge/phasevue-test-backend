@@ -13,7 +13,15 @@ const Projects = {
   },
 
   async getOneProject(req, res) {
-    const project = await Project.find({ _id: req.params.projectId }).populate('phases').sort({ createdAt: -1 });
+    const project = await Project
+      .find({ _id: req.params.projectId })
+      .populate({
+        path: 'phases', // populate phases
+        populate: {
+          path: 'deliverables' // in phases, populate deliverables
+        }
+      })
+      .sort({ createdAt: -1 });
     res.status(200).json(project);
   },
 
