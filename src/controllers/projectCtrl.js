@@ -8,7 +8,15 @@ import User from '../models/user';
 const Projects = {
 
   async getAllProjects(req, res) {
-    const projects = await Project.find({ createdBy: req.user.id }).sort({ createdAt: -1 });
+    const projects = await Project
+      .find({ createdBy: req.user.id })
+      .populate({
+        path: 'phases', // populate phases
+        populate: {
+          path: 'deliverables' // in phases, populate deliverables
+        }
+      })
+      .sort({ createdAt: -1 });
     res.status(200).json(projects);
   },
 

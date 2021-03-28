@@ -19,7 +19,14 @@ const Deliverables = {
       { _id: req.body.id }, { $push: { deliverables: deliverable._id } }, { new: true }
     );
     return res.status(201).json(deliverable);
+  },
+  async updateDeliverable(req, res) {
+    const deliverable = await Deliverable.findByIdAndUpdate(req.body.id, req.body, {
+      new: true
+    });
+    res.status(200).json(deliverable);
   }
+
 };
 
 export default Deliverables;

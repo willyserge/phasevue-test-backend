@@ -10,6 +10,10 @@ const deliverableSchema = new Schema(
       type: String,
       required: true
     },
+    complete: {
+      type: Boolean,
+      default: false
+    },
     comments: [{
       type: Schema.Types.ObjectId,
       ref: 'Comment'
