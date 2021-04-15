@@ -32,7 +32,7 @@ uploadRouter.post('/', auth, (req, res) => {
       return res.status(400).send({ message: 'File format is incorrect.' });
     }
 
-    cloudinary.v2.uploader.upload(file.tempFilePath, { folder: 'test' }, async (err, result) => {
+    cloudinary.v2.uploader.upload(file.tempFilePath, { folder: 'phaseview' }, async (err, result) => {
       if (err) throw err;
 
       removeTmp(file.tempFilePath);

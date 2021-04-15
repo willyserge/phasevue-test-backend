@@ -6,7 +6,6 @@ import cookieParser from 'cookie-parser';
 import fileUpload from 'express-fileupload';
 
 import authRouter from './routes/auth';
-import cloudinaryRoutes from './routes/cloudinary';
 import userRouter from './routes/user';
 import projectsRouter from './routes/projects';
 import phasesRouter from './routes/phase';
