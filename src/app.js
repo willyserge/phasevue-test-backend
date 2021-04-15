@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import createError from 'http-errors';
 import cookieParser from 'cookie-parser';
+import fileUpload from 'express-fileupload';
 
 import authRouter from './routes/auth';
 import cloudinaryRoutes from './routes/cloudinary';
@@ -12,6 +13,7 @@ import phasesRouter from './routes/phase';
 import deliverableRouter from './routes/deliverable';
 import commentRouter from './routes/comment';
 import templatesRouter from './routes/template';
+import uploadRouter from './routes/upload';
 
 
 const app = express();
@@ -37,6 +39,9 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
+app.use(fileUpload({
+  useTempFiles: true
+}));
 
 app.use('/api/auth', authRouter);
 app.use('/api/', projectsRouter);
@@ -45,7 +50,7 @@ app.use('/api/', phasesRouter);
 app.use('/api/', deliverableRouter);
 app.use('/api/', commentRouter);
 app.use('/api/', userRouter);
-app.use('/api/cloudinary', cloudinaryRoutes);
+app.use('/api/upload', uploadRouter);
 
 
 app.get('/', (req, res) => {

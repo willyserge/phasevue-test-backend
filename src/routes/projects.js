@@ -11,5 +11,6 @@ const projectsRouter = express.Router();
 projectsRouter.get('/projects', auth, AsyncHandler(Projects.getAllProjects));
 projectsRouter.get('/project/:projectId', auth, AsyncHandler(Projects.getOneProject));
 projectsRouter.post('/projects/create', auth, AsyncHandler(Projects.createProject));
+projectsRouter.get('/project/invite/:token', auth, AsyncHandler(Projects.addUserToProject));
 
 export default projectsRouter;

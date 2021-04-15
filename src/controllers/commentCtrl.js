@@ -5,7 +5,7 @@ import Deliverable from '../models/deliverable';
 const Comments = {
 
   async getDeliverableComments(req, res) {
-    const comments = await Deliverable.find({ _id: req.body.id }).populate('comments').sort({ createdAt: -1 });
+    const comments = await Deliverable.find({ _id: req.params.deliverableId }).populate('comments').sort({ createdAt: -1 });
     res.status(200).json(comments);
   },
 

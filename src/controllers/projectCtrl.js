@@ -1,6 +1,8 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-underscore-dangle */
 import slugify from 'slugify';
+import jwt from 'jsonwebtoken';
+
 import Phase from '../models/phase';
 import Project from '../models/project';
 import User from '../models/user';
@@ -9,7 +11,7 @@ const Projects = {
 
   async getAllProjects(req, res) {
     const projects = await Project
-      .find({ createdBy: req.user.id })
+      .find({ members: req.user.email })
       .populate({
         path: 'phases', // populate phases
         populate: {
@@ -19,6 +21,7 @@ const Projects = {
       .sort({ createdAt: -1 });
     res.status(200).json(projects);
   },
+
 
   async getOneProject(req, res) {
     const project = await Project
@@ -31,6 +34,16 @@ const Projects = {
       })
       .sort({ createdAt: -1 });
     res.status(200).json(project);
+  },
+
+  async addUserToProject(req, res) {
+    const { token } = req.params;
+    const details = jwt.verify(token, process.env.JWT_SECRET);
+    const project = await Project.updateOne(
+      { _id: details.projectId },
+      { $addToSet: { members: [details.email] } }
+    );
+    return res.status(200).json(details);
   },
 
   async createProject(req, res) {
