@@ -6,6 +6,9 @@ const imageSchema = new Schema(
     image: {
       type: String
     },
+    image_public_id: {
+      type: String
+    },
     Annotations: {
       type: Array
     }

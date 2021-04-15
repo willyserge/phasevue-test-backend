@@ -17,6 +17,10 @@ const deliverableSchema = new Schema(
     comments: [{
       type: Schema.Types.ObjectId,
       ref: 'Comment'
+    }],
+    images: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Image'
     }]
   },
   {

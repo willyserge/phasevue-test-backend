@@ -13,6 +13,7 @@ import deliverableRouter from './routes/deliverable';
 import commentRouter from './routes/comment';
 import templatesRouter from './routes/template';
 import uploadRouter from './routes/upload';
+import imageRouter from './routes/image';
 
 
 const app = express();
@@ -48,6 +49,7 @@ app.use('/api/template', templatesRouter);
 app.use('/api/', phasesRouter);
 app.use('/api/', deliverableRouter);
 app.use('/api/', commentRouter);
+app.use('/api/', imageRouter);
 app.use('/api/', userRouter);
 app.use('/api/upload', uploadRouter);
 
