@@ -25,6 +25,12 @@ const Deliverables = {
       new: true
     });
     res.status(200).json(deliverable);
+  },
+
+  async deleteDeliverable(req, res) {
+    const { deliverableId } = req.params;
+    await Deliverable.findByIdAndRemove(deliverableId);
+    res.status(200).json({ message: 'deliverable deleted successfully' });
   }
 
 };

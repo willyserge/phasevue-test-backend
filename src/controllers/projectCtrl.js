@@ -64,6 +64,12 @@ const Projects = {
     }
 
     return res.status(201).json(project);
+  },
+
+  async deleteProject(req, res) {
+    const { projectId } = req.params;
+    await Project.findByIdAndRemove(projectId);
+    res.status(200).json({ message: 'project deleted successfully' });
   }
 };
 

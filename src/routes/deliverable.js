@@ -10,6 +10,7 @@ const deliverableRouter = express.Router();
 deliverableRouter.post('/phase/deliverables', AsyncHandler(Deliverables.getPhaseDeliverables));
 deliverableRouter.post('/deliverable/', AsyncHandler(Deliverables.createDeliverable));
 deliverableRouter.put('/deliverable/update', AsyncHandler(Deliverables.updateDeliverable));
+deliverableRouter.delete('/deliverable/:deliverableId', AsyncHandler(Deliverables.deleteDeliverable));
 
 
 export default deliverableRouter;
