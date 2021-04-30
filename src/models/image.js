@@ -3,10 +3,10 @@ import mongoose, { Schema } from 'mongoose';
 
 const imageSchema = new Schema(
   {
-    image: {
+    url: {
       type: String
     },
-    image_public_id: {
+    public_id: {
       type: String
     },
     Annotations: {

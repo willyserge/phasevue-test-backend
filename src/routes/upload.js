@@ -17,7 +17,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-uploadRouter.post('/', auth, (req, res) => {
+uploadRouter.post('/', auth, async (req, res) => {
   try {
     if (!req.files || Object.keys(req.files).length === 0) return res.status(400).send({ message: 'No files were uploaded.' });
 
@@ -32,7 +32,7 @@ uploadRouter.post('/', auth, (req, res) => {
       return res.status(400).send({ message: 'File format is incorrect.' });
     }
 
-    cloudinary.v2.uploader.upload(file.tempFilePath, { folder: 'phaseview' }, async (err, result) => {
+    await cloudinary.v2.uploader.upload(file.tempFilePath, { folder: 'phaseview' }, async (err, result) => {
       if (err) throw err;
 
       removeTmp(file.tempFilePath);
@@ -40,7 +40,6 @@ uploadRouter.post('/', auth, (req, res) => {
       res.send({ public_id: result.public_id, url: result.secure_url });
     });
   } catch (err) {
-      console.log(err)
     return res.status(500).send({ message: err.message });
   }
 });

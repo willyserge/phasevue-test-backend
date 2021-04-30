@@ -5,12 +5,17 @@ import Deliverable from '../models/deliverable';
 const Comments = {
 
   async getDeliverableComments(req, res) {
-    const comments = await Deliverable.find({ _id: req.params.deliverableId }).populate('comments images').sort({ createdAt: -1 });
+    const comments = await Deliverable.find({ _id: req.params.deliverableId }).populate({
+      path: 'comments', // populate phases
+      populate: {
+        path: 'commenter' // in phases, populate deliverables
+      }
+    }).populate('images').sort({ createdAt: -1 });
     res.status(200).json(comments);
   },
 
   async createComments(req, res) {
-    req.body.commenter = req.user._id;
+    req.body.commenter = req.user.id;
     const newComment = new Comment(req.body);
     const comment = await newComment.save();
     const DeliverableComment = await Deliverable.findOneAndUpdate(

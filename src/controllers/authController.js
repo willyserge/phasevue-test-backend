@@ -37,8 +37,8 @@ const Auth = {
   },
 
   logout(req, res) {
-    res.cookie('jwt', '', { maxAge: 1 });
-    res.redirect('/');
+    res.clearCookie('jwt');
+    return res.redirect('/');
   }
 };
 export default Auth;

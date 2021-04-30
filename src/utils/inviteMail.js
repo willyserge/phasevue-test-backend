@@ -11,7 +11,7 @@ const inviteMail = ({
     to: email,
     subject: `invitation from ${inviter}`,
     html: `
-    <div style="max-width: 700px; margin:auto; border: 10px solid blue; padding: 50px 20px; font-size: 110%;">
+    <div style="max-width: 700px; margin:auto; padding: 50px 20px; font-size: 110%;">
     <h2 style="text-align: center; text-transform: uppercase;color: teal;">Project Invitation</h2>
     <p> You've been invited by ${inviter} to collaborate on the ${projectName} project
     </p>
