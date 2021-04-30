@@ -1,7 +1,6 @@
 import express from 'express';
 import AsyncHandler from 'express-async-handler';
-
-import Deliverables from '../controllers/deliverablectrl';
+import Deliverables from '../controllers/deliverableCtrl';
 import auth from '../middleware/auth';
 import Validate from '../middleware/validator';
 
