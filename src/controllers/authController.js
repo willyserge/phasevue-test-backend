@@ -32,11 +32,7 @@ const Auth = {
 
     // If login success , create access token and cookie
     const accessToken = createAccessToken({ id: user._id, email: user.email, name: user.name });
-    res.cookie('jwt', accessToken, {
-      domain: 'https://app.phasevue.com',
-      httpOnly: true,
-      maxAge
-    });
+    res.cookie('jwt', accessToken, { httpOnly: false, secure: true, sameSite: 'none' });
     return res.status(200).send({ accessToken });
   },
 
