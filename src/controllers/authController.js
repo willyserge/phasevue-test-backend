@@ -36,8 +36,8 @@ const Auth = {
     const options = {
       expires: new Date(Date.now() + maxAge),
       sameSite: 'none',
-      secure: NODE_ENV === 'prodution',
-      httpOnly: NODE_ENV === 'production'
+      secure: true,
+      httpOnly: false
     };
     res.cookie('jwt', accessToken, options);
     return res.status(200).send({ accessToken });
