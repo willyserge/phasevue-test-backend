@@ -10,6 +10,6 @@ authRouter.post('/signup', Validate.signup, AsyncHandler(Auth.signup));
 authRouter.post('/signin', Validate.signin, AsyncHandler(Auth.signin));
 authRouter.get('/logout', Auth.logout);
 authRouter.get('/token', (req, res) => {
-  res.send(req.cookies);
+  res.send(req.cookies.jwt);
 });
 export default authRouter;
