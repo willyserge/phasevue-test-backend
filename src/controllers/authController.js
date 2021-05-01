@@ -44,12 +44,7 @@ const Auth = {
   },
 
   async logout(req, res) {
-    const options = {
-      expires: new Date(Date.now() + 10000),
-      secure: NODE_ENV === 'prodution',
-      httpOnly: NODE_ENV === 'production'
-    };
-    res.cookie('jwt', 'expiredtoken', options);
+    res.clearCookie('jwt');
     res.status(200).json({ status: 'success' });
   }
 };
