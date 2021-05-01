@@ -37,7 +37,7 @@ const Auth = {
   },
 
   logout(req, res) {
-    res.clearCookie('jwt');
+    res.cookie('jwt', '', { maxAge: 1 });
     return res.redirect('/');
   }
 };
