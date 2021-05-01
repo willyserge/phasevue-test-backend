@@ -5,6 +5,7 @@ import User from '../models/user';
 import { createAccessToken } from '../utils';
 
 const maxAge = 3 * 24 * 60 * 60 * 1000;
+const { NODE_ENV } = process.env;
 
 
 const Auth = {
@@ -32,13 +33,23 @@ const Auth = {
 
     // If login success , create access token and cookie
     const accessToken = createAccessToken({ id: user._id, email: user.email, name: user.name });
-    res.cookie('jwt', accessToken, { httpOnly: false, secure: true, sameSite: 'none' });
+    const options = {
+      expires: new Date(Date.now() + maxAge),
+      secure: NODE_ENV === 'prodution',
+      httpOnly: NODE_ENV === 'production'
+    };
+    res.cookie('jwt', accessToken, options);
     return res.status(200).send({ accessToken });
   },
 
-  logout(req, res) {
-    res.cookie('jwt', '', { maxAge: 1 });
-    return res.redirect('/');
+  async logout(req, res) {
+    const options = {
+      expires: new Date(Date.now() + 10000),
+      secure: NODE_ENV === 'prodution',
+      httpOnly: NODE_ENV === 'production'
+    };
+    res.cookie('jwt', 'expiredtoken', options);
+    res.status(200).json({ status: 'success' });
   }
 };
 export default Auth;
