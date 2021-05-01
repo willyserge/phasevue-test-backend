@@ -34,7 +34,7 @@ const Auth = {
     // If login success , create access token and cookie
     const accessToken = createAccessToken({ id: user._id, email: user.email, name: user.name });
     const options = {
-      expires: new Date(Date.now() + maxAge),
+      expires:  new Date(Date.now() + maxAge),
       domain: 'https://app.phasevue.com',
       secure: NODE_ENV === 'prodution',
       httpOnly: NODE_ENV === 'production'
