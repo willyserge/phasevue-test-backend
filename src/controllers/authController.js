@@ -40,7 +40,7 @@ const Auth = {
 
   logout(req, res) {
     res.cookie('jwt', '', { secure: true, sameSite: 'none', maxAge: 1 });
-    return res.send(res.cookies);
+    return res.send('success');
   }
 };
 export default Auth;

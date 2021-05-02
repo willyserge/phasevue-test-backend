@@ -8,7 +8,7 @@ const authRouter = express.Router();
 
 authRouter.post('/signup', Validate.signup, AsyncHandler(Auth.signup));
 authRouter.post('/signin', Validate.signin, AsyncHandler(Auth.signin));
-authRouter.get('/logout', Auth.logout);
+authRouter.post('/logout', Auth.logout);
 authRouter.get('/token', (req, res) => {
   res.send(req.cookies.jwt);
 });
