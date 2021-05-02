@@ -33,14 +33,7 @@ const Auth = {
 
     // If login success , create access token and cookie
     const accessToken = createAccessToken({ id: user._id, email: user.email, name: user.name });
-    const options = {
-      expires: new Date(Date.now() + maxAge),
-      domain: 'https://phasevue-api.herokuapp.com',
-      sameSite: 'none',
-      secure: true,
-      httpOnly: false
-    };
-    res.cookie('jwt', accessToken, options);
+    res.cookie('jwt', accessToken, { expire: new Date() + 9999 });
     return res.status(200).send({ accessToken });
   },
 
