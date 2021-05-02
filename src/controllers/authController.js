@@ -39,8 +39,8 @@ const Auth = {
   },
 
   logout(req, res) {
-    res.cookie('jwt', '', { maxAge: 1 });
-    return res.redirect('/');
+    res.cookie('jwt', '', { secure: true, sameSite: 'none', maxAge: 1 });
+    return res.send(res.cookies);
   }
 };
 export default Auth;
