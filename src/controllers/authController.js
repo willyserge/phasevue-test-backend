@@ -35,6 +35,7 @@ const Auth = {
     const accessToken = createAccessToken({ id: user._id, email: user.email, name: user.name });
     const options = {
       expires: new Date(Date.now() + maxAge),
+      domain: 'https://app.phasevue.com',
       sameSite: 'none',
       secure: true,
       httpOnly: false
