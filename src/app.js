@@ -39,8 +39,6 @@ const corsOptions = {
   preflightContinue: false
 };
 
-app.set('trust proxy', 1);
-
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(fileUpload({

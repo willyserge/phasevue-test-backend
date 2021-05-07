@@ -32,13 +32,15 @@ const Auth = {
 
     // If login success , create access token and cookie
     const accessToken = createAccessToken({ id: user._id, email: user.email, name: user.name });
-    res.cookie('jwt', accessToken, { httpOnly: true, maxAge });
+    res.cookie('jwt', accessToken, {
+      httpOnly: false, secure: true, sameSite: 'none', maxAge
+    });
     return res.status(200).send({ accessToken });
   },
 
   logout(req, res) {
-    res.clearCookie('jwt');
-    return res.redirect('/');
+    res.cookie('jwt', '', { secure: true, sameSite: 'none', maxAge: 1 });
+    return res.send('success');
   }
 };
 export default Auth;
