@@ -32,7 +32,12 @@ const Auth = {
 
     // If login success , create access token and cookie
     const accessToken = createAccessToken({ id: user._id, email: user.email, name: user.name });
-    res.cookie('jwt', accessToken, { httpOnly: true, maxAge });
+    res.cookie('jwt', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+      maxAge
+    });
     return res.status(200).send({ accessToken });
   },
 
