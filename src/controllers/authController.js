@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 
 import User from '../models/user';
 import { createAccessToken } from '../utils';
+import WelcomeMail from '../utils/welcomeMail';
 
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 
@@ -16,7 +17,8 @@ const Auth = {
     const passwordHash = await bcrypt.hash(password, 10);
     const newUser = new User({ name, email, password: passwordHash });
 
-    await newUser.save();
+    const registeredUser = await newUser.save();
+    WelcomeMail(registeredUser.email);
     const accessToken = createAccessToken({ id: newUser._id, email: newUser.email });
     return res.status(201).send({ accessToken });
   },
