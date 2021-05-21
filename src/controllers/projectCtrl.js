@@ -65,7 +65,11 @@ const Projects = {
 
     return res.status(201).json(project);
   },
-
+  async updateProject(req, res) {
+    const { projectId } = req.body;
+    const project = await Project.findByIdAndUpdate(projectId, req.body);
+    res.status(200).json(project);
+  },
   async deleteProject(req, res) {
     const { projectId } = req.params;
     await Project.findByIdAndRemove(projectId);
