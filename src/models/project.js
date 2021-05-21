@@ -12,10 +12,18 @@ const projectSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Phase'
     }],
-    collaborators: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Collaborator'
-    }],
+    collaborators: {
+      type: Array,
+      required: true
+    },
+    viewers: {
+      type: Array,
+      required: true
+    },
+    admins: {
+      type: Array,
+      required: true
+    },
     slug: {
       type: String,
       trim: true,

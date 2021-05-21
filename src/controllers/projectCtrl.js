@@ -5,13 +5,12 @@ import jwt from 'jsonwebtoken';
 
 import Phase from '../models/phase';
 import Project from '../models/project';
-import User from '../models/user';
 
 const Projects = {
 
   async getAllProjects(req, res) {
     const projects = await Project
-      .find({ members: req.user.email })
+      .find({ collaborators: req.user.email })
       .populate({
         path: 'phases', // populate phases
         populate: {
@@ -41,14 +40,15 @@ const Projects = {
     const details = jwt.verify(token, process.env.JWT_SECRET);
     const project = await Project.updateOne(
       { _id: details.projectId },
-      { $addToSet: { members: [details.email] } }
+      { $addToSet: { collaborators: [details.email] } }
     );
     return res.status(200).json(details);
   },
 
   async createProject(req, res) {
     req.body.slug = slugify(req.body.name);
-    req.body.members = req.user.email;
+    req.body.collaborators = req.user.email;
+    req.body.admins = req.user.email;
     const newProject = new Project(req.body);
     newProject.createdBy = req.user.id;
     const project = await newProject.save();
@@ -65,11 +65,13 @@ const Projects = {
 
     return res.status(201).json(project);
   },
+
   async updateProject(req, res) {
     const { projectId } = req.body;
     const project = await Project.findByIdAndUpdate(projectId, req.body);
     res.status(200).json(project);
   },
+
   async deleteProject(req, res) {
     const { projectId } = req.params;
     await Project.findByIdAndRemove(projectId);
