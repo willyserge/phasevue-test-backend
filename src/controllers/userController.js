@@ -19,6 +19,7 @@ const UserController = {
         projectId: req.body.projectId,
         projectName: req.body.projectName,
         email: req.body.email,
+        inviteAs: req.body.inviteAs,
         inviter: req.user.names
       }
     );
