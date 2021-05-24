@@ -1,6 +1,7 @@
 import User from '../models/user';
 import { createAccessToken } from '../utils';
 import inviteMail from '../utils/inviteMail';
+import resetMail from '../utils/resetMail';
 
 const UserController = {
   async getAllUsers(req, res) {
@@ -11,6 +12,24 @@ const UserController = {
   async userInfo(req, res) {
     const user = await User.findById(req.user.id).select('-password');
     res.status(200).json(user);
+  },
+
+  async sendResetEmail(req, res) {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) return res.status(400).send({ msg: 'That user doesn’t exist' });
+
+    const resetToken = createAccessToken(
+      {
+        email: req.body.email
+      }
+    );
+    const RESET_URL = process.env.RESET_CLIENT_URL;
+    const url = `${RESET_URL}/password-reset/${resetToken}`;
+    resetMail({
+      email: req.body.email,
+      url
+    });
+    res.status(200).json('invite sent');
   },
 
   async projectInvite(req, res) {
@@ -33,6 +52,7 @@ const UserController = {
     });
     res.status(200).json('invite sent');
   },
+
 
   async deleteUser(req, res) {
     await User.remove({ _id: req.params.id });
