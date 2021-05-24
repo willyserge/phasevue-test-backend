@@ -29,7 +29,7 @@ const UserController = {
       email: req.body.email,
       url
     });
-    res.status(200).json('invite sent');
+    return res.status(200).json('invite sent');
   },
 
   async projectInvite(req, res) {
