@@ -16,6 +16,16 @@ const UserController = {
     res.status(200).json(user);
   },
 
+  async updateProfilePicture(req, res) {
+    const { userId, picture_url, picture_id } = req.body;
+    console.log(picture_url)
+    const user = await User.findByIdAndUpdate(userId, {
+      picture: picture_url,
+      cloudinary_id: picture_id
+    });
+    res.status(200).json(user);
+  },
+
   async sendResetEmail(req, res) {
     const user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(400).send({ msg: 'That user doesn’t exist' });
