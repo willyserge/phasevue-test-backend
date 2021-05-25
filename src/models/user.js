@@ -23,8 +23,7 @@ const userSchema = new mongoose.Schema(
       minlength: 6
     },
     picture: {
-      type: String,
-      default: 'https://res.cloudinary.com/dorlzbjs4/image/upload/v1618242299/avatars/3551739_s231iv.jpg'
+      type: String
     },
     cloudinary_id: {
       type: String

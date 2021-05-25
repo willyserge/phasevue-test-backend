@@ -18,11 +18,9 @@ const UserController = {
 
   async updateProfilePicture(req, res) {
     const { userId, picture_url, picture_id } = req.body;
-    console.log(picture_url)
     const user = await User.findByIdAndUpdate(userId, {
       picture: picture_url,
-      cloudinary_id: picture_id
-    });
+    }, {new: true});
     res.status(200).json(user);
   },
 
