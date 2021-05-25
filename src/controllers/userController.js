@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+
 import User from '../models/user';
 import { createAccessToken } from '../utils';
 import inviteMail from '../utils/inviteMail';
@@ -24,12 +26,30 @@ const UserController = {
       }
     );
     const RESET_URL = process.env.RESET_CLIENT_URL;
-    const url = `${RESET_URL}/password-reset/${resetToken}`;
+    const url = `${RESET_URL}/reset/${resetToken}`;
     resetMail({
       email: req.body.email,
       url
     });
     return res.status(200).json('invite sent');
+  },
+
+  async verifyResetToken(req, res) {
+    const { token } = req.params;
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (decodedToken) {
+      return res.status(200).json('the token is valid');
+    }
+    return res.status(400).json({ error: 'invalid or expired token' });
+  },
+
+  async resetPassword(req, res) {
+    const { token, newPassword } = req.body;
+    const details = jwt.verify(token, process.env.JWT_SECRET);
+
+
+    return res.status(200).json(details);
   },
 
   async projectInvite(req, res) {

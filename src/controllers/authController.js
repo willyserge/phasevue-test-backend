@@ -42,6 +42,12 @@ const Auth = {
     });
     return res.status(200).send({ accessToken });
   },
+  checkCookie(req, res) {
+    if (req.cookies.jwt) {
+      return res.status(200).json('cookie available');
+    }
+    return res.status(400).json('no cookie found');
+  },
 
   logout(req, res) {
     res.clearCookie('jwt');
