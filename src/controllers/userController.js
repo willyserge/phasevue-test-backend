@@ -45,7 +45,7 @@ const UserController = {
   },
 
   async resetPassword(req, res) {
-    const { token, newPassword } = req.body;
+    const { token } = req.body;
     const details = jwt.verify(token, process.env.JWT_SECRET);
 
 
