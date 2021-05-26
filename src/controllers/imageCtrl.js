@@ -16,7 +16,15 @@ const Images = {
       { _id: req.body.id }, { $push: { images: image._id } }, { new: true }
     );
     return res.status(201).json(DeliverableImage);
+  },
+
+  async addImageAnnotations(req, res) {
+    const image = await Image.findByIdAndUpdate(req.body.id, req.body, {
+      new: true
+    });
+    res.status(200).json(image);
   }
+
 };
 
 export default Images;
