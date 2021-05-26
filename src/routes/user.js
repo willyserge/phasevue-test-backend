@@ -11,6 +11,7 @@ userRouter.get('/user/user_info', auth, AsyncHandler(UserController.userInfo));
 userRouter.put('/user/profilePicture/update', auth, AsyncHandler(UserController.updateProfilePicture));
 userRouter.post('/user/password_reset_email', AsyncHandler(UserController.sendResetEmail));
 userRouter.get('/token/verify/:token', AsyncHandler(UserController.verifyResetToken));
+userRouter.put('/user/password_reset', AsyncHandler(UserController.resetPassword));
 userRouter.post('/user/project/invite', auth, AsyncHandler(UserController.projectInvite));
 
 

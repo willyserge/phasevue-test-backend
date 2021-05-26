@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 import User from '../models/user';
 import { createAccessToken } from '../utils';
@@ -19,8 +20,8 @@ const UserController = {
   async updateProfilePicture(req, res) {
     const { userId, picture_url, picture_id } = req.body;
     const user = await User.findByIdAndUpdate(userId, {
-      picture: picture_url,
-    }, {new: true});
+      picture: picture_url
+    }, { new: true });
     res.status(200).json(user);
   },
 
@@ -49,15 +50,21 @@ const UserController = {
     if (decodedToken) {
       return res.status(200).json('the token is valid');
     }
+
     return res.status(400).json({ error: 'invalid or expired token' });
   },
 
   async resetPassword(req, res) {
-    const { token } = req.body;
+    const { token, password } = req.body;
     const details = jwt.verify(token, process.env.JWT_SECRET);
 
-
-    return res.status(200).json(details);
+    const newPassword = await bcrypt.hash(password, 10);
+    await User.findOneAndUpdate(
+      { email: details.email },
+      { password: newPassword },
+      { new: true }
+    );
+    return res.status(200).json('password successfully updated');
   },
 
   async projectInvite(req, res) {
