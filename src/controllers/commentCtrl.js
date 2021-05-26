@@ -22,6 +22,12 @@ const Comments = {
       { _id: req.body.id }, { $push: { comments: comment._id } }, { new: true }
     );
     return res.status(201).json(DeliverableComment);
+  },
+
+  async deleteComment(req, res) {
+    const { commentId } = req.params;
+    await Comment.findByIdAndRemove(commentId);
+    res.status(200).json({ message: 'comment deleted successfully' });
   }
 };
 

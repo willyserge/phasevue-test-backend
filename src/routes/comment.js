@@ -11,6 +11,7 @@ const commentRouter = express.Router();
 
 commentRouter.get('/deliverable/comments/:deliverableId', AsyncHandler(Comments.getDeliverableComments));
 commentRouter.post('/deliverable/comment', auth, AsyncHandler(Comments.createComments));
+commentRouter.delete('/comment/:commentId', AsyncHandler(Comments.deleteComment));
 
 
 export default commentRouter;
