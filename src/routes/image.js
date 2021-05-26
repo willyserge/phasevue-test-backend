@@ -10,6 +10,7 @@ const imageRouter = express.Router();
 
 imageRouter.get('/deliverable/images/:deliverableId', AsyncHandler(Images.getDeliverableImages));
 imageRouter.post('/deliverable/image', auth, AsyncHandler(Images.createImages));
-imageRouter.put('/deliverable/image/annotate', AsyncHandler(Images.addImageAnnotations));
+imageRouter.put('/deliverable/image/annotate', auth, AsyncHandler(Images.addImageAnnotations));
+imageRouter.delete('/deliverable/image/delete/:id', auth, AsyncHandler(Images.deleteImage));
 
 export default imageRouter;

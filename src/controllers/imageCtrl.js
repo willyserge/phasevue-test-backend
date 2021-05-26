@@ -23,6 +23,11 @@ const Images = {
       new: true
     });
     res.status(200).json(image);
+  },
+
+  async deleteImage(req, res) {
+    await Image.findByIdAndRemove(req.params.id);
+    res.status(200).json({ message: 'image deleted successfully' });
   }
 
 };
