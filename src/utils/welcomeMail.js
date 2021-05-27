@@ -5,8 +5,8 @@ const WelcomeMail = (email) => {
   const msg = {
     to: email,
     from: 'info@phasevue.com',
-    subject: 'Password reset',
-    html: '<h3> Welcome to phasvue </h3>'
+    subject: 'Welcome to phasevue',
+    html: '<h3> Welcome to phasavue </h3>'
   };
   sgMail
     .send(msg)
