@@ -1,16 +1,15 @@
-import mailgun from 'mailgun-js';
+import sgMail from '@sendgrid/mail';
 
 
 const resetMail = ({
   email, url
 }) => {
-  const DOMAIN = process.env.MAILGUN_DOMAIN;
-  const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY, domain: DOMAIN });
-  const data = {
-    from: 'no-reply@phasevue.com',
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  const msg = {
     to: email,
+    from: 'info@phasevue.com',
     subject: 'Password reset',
-    html: `
+    html:   `
 
     <div style="max-width: 700px; margin:auto; padding: 50px 20px; font-size: 110%;">
     <h2 style=" text-transform: uppercase;color: teal;">Password reset</h2>
@@ -26,9 +25,14 @@ const resetMail = ({
     </div>
 `
   };
-  mg.messages().send(data, (error, body) => {
-    console.log(body);
-  });
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log('Email sent');
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 export default resetMail;

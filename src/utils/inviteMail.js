@@ -1,16 +1,15 @@
-import mailgun from 'mailgun-js';
+import sgMail from '@sendgrid/mail';
 
 
 const inviteMail = ({
   email, url, inviter, projectName
 }) => {
-  const DOMAIN = process.env.MAILGUN_DOMAIN;
-  const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY, domain: DOMAIN });
-  const data = {
-    from: 'no-reply@phaseView.com',
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  const msg = {
     to: email,
-    subject: `invitation from ${inviter}`,
-    html: `
+    from: 'info@phasevue.com',
+    subject: 'Project invitation',
+    html:  `
     <div style="max-width: 700px; margin:auto; padding: 50px 20px; font-size: 110%;">
     <h2 style="text-align: center; text-transform: uppercase;color: teal;">Project Invitation</h2>
     <p> You've been invited by ${inviter} to collaborate on the <strong>${projectName}</strong> project
@@ -24,9 +23,14 @@ const inviteMail = ({
     </div>
 `
   };
-  mg.messages().send(data, (error, body) => {
-    console.log(body);
-  });
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log('Email sent');
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 export default inviteMail;

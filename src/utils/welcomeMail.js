@@ -1,20 +1,21 @@
-import mailgun from 'mailgun-js';
-
+import sgMail from '@sendgrid/mail';
 
 const WelcomeMail = (email) => {
-  const DOMAIN = process.env.MAILGUN_DOMAIN;
-  const mg = mailgun({ apiKey: process.env.MAILGUN_API_KEY, domain: DOMAIN });
-  const data = {
-    from: 'no-reply@phaseView.com',
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  const msg = {
     to: email,
-    subject: 'Welcome to phasevue',
-    html: `
-    <h3>Welcome to phasevue</h3>
-`
+    from: 'info@phasevue.com',
+    subject: 'Password reset',
+    html: '<h3> Welcome to phasvue </h3>'
   };
-  mg.messages().send(data, (error, body) => {
-    console.log(body);
-  });
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log('Email sent');
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 export default WelcomeMail;
