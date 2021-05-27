@@ -9,9 +9,9 @@ import Validate from '../middleware/validator';
 const commentRouter = express.Router();
 
 
-commentRouter.get('/deliverable/comments/:deliverableId', AsyncHandler(Comments.getDeliverableComments));
+commentRouter.get('/deliverable/comments/:deliverableId', auth, AsyncHandler(Comments.getDeliverableComments));
 commentRouter.post('/deliverable/comment', auth, AsyncHandler(Comments.createComments));
-commentRouter.delete('/comment/:commentId', AsyncHandler(Comments.deleteComment));
+commentRouter.delete('/comment/:commentId', auth, AsyncHandler(Comments.deleteComment));
 
 
 export default commentRouter;

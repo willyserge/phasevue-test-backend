@@ -6,10 +6,10 @@ import Validate from '../middleware/validator';
 
 const deliverableRouter = express.Router();
 
-deliverableRouter.post('/phase/deliverables', AsyncHandler(Deliverables.getPhaseDeliverables));
-deliverableRouter.post('/deliverable/', AsyncHandler(Deliverables.createDeliverable));
-deliverableRouter.put('/deliverable/update', AsyncHandler(Deliverables.updateDeliverable));
-deliverableRouter.delete('/deliverable/:deliverableId', AsyncHandler(Deliverables.deleteDeliverable));
+deliverableRouter.post('/phase/deliverables', auth, AsyncHandler(Deliverables.getPhaseDeliverables));
+deliverableRouter.post('/deliverable/', auth, AsyncHandler(Deliverables.createDeliverable));
+deliverableRouter.put('/deliverable/update', auth, AsyncHandler(Deliverables.updateDeliverable));
+deliverableRouter.delete('/deliverable/:deliverableId', auth, AsyncHandler(Deliverables.deleteDeliverable));
 
 
 export default deliverableRouter;

@@ -13,6 +13,6 @@ projectsRouter.get('/project/:projectId', auth, AsyncHandler(Projects.getOneProj
 projectsRouter.post('/projects/create', auth, AsyncHandler(Projects.createProject));
 projectsRouter.put('/projects/update', auth, AsyncHandler(Projects.updateProject));
 projectsRouter.delete('/project/:projectId', auth, AsyncHandler(Projects.deleteProject));
-projectsRouter.get('/project/invite/:token', AsyncHandler(Projects.addUserToProject));
+projectsRouter.get('/project/invite/:token', auth, AsyncHandler(Projects.addUserToProject));
 
 export default projectsRouter;

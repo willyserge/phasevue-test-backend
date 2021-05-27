@@ -9,8 +9,8 @@ import Validate from '../middleware/validator';
 const phaseRouter = express.Router();
 
 
-phaseRouter.get('/phases', AsyncHandler(Phases.getAllPhases));
-phaseRouter.post('/project/phase/:projectId', AsyncHandler(Phases.createPhase));
+phaseRouter.get('/phases', auth, AsyncHandler(Phases.getAllPhases));
+phaseRouter.post('/project/phase/:projectId', auth, AsyncHandler(Phases.createPhase));
 
 
 export default phaseRouter;
