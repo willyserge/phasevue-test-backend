@@ -21,7 +21,11 @@ const deliverableSchema = new Schema(
     images: [{
       type: Schema.Types.ObjectId,
       ref: 'Image'
-    }]
+    }],
+    project: {
+      type: Schema.Types.ObjectId,
+      ref: 'Project'
+    }
   },
   {
     timestamps: true

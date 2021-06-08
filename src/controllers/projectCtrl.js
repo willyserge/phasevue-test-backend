@@ -84,7 +84,26 @@ const Projects = {
     const { projectId } = req.params;
     await Project.findByIdAndRemove(projectId);
     res.status(200).json({ message: 'project deleted successfully' });
+  },
+
+  async addClient(req, res) {
+    const { projectId, email } = req.body;
+
+    await Project.updateOne(
+      { _id: projectId },
+      { $addToSet: { clients: [email] } }
+    );
+
+    res.status(200).json('client added');
+  },
+
+  async getProjectClients(req, res) {
+    const { projectId } = req.params;
+    const clients = await Project.findById(projectId).select('clients');
+    res.status(200).json(clients);
   }
+
+
 };
 
 export default Projects;

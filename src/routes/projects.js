@@ -14,5 +14,7 @@ projectsRouter.post('/projects/create', auth, AsyncHandler(Projects.createProjec
 projectsRouter.put('/projects/update', auth, AsyncHandler(Projects.updateProject));
 projectsRouter.delete('/project/:projectId', auth, AsyncHandler(Projects.deleteProject));
 projectsRouter.get('/project/invite/:token', auth, AsyncHandler(Projects.addUserToProject));
+projectsRouter.put('/projects/addClient', auth, AsyncHandler(Projects.addClient));
+projectsRouter.get('/project/clients/:projectId', auth, AsyncHandler(Projects.getProjectClients));
 
 export default projectsRouter;

@@ -16,6 +16,10 @@ const projectSchema = new Schema(
       type: Array,
       required: true
     },
+    clients: {
+      type: Array,
+      required: true
+    },
     viewers: {
       type: Array,
       required: true
