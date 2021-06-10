@@ -10,6 +10,7 @@ deliverableRouter.post('/phase/deliverables', auth, AsyncHandler(Deliverables.ge
 deliverableRouter.post('/deliverable/', auth, AsyncHandler(Deliverables.createDeliverable));
 deliverableRouter.put('/deliverable/update', auth, AsyncHandler(Deliverables.updateDeliverable));
 deliverableRouter.delete('/deliverable/:deliverableId', auth, AsyncHandler(Deliverables.deleteDeliverable));
+deliverableRouter.get('/client/invite/:token', AsyncHandler(Deliverables.grantClientDeliverableAccess));
 
 
 export default deliverableRouter;

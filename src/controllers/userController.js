@@ -5,6 +5,7 @@ import User from '../models/user';
 import { createAccessToken } from '../utils';
 import inviteMail from '../utils/inviteMail';
 import resetMail from '../utils/resetMail';
+import clientInviteMail from '../utils/clientInviteMail';
 
 const UserController = {
   async getAllUsers(req, res) {
@@ -86,6 +87,51 @@ const UserController = {
       inviter: req.user.name
     });
     res.status(200).json('invite sent');
+  },
+
+  async clientInvite(req, res) {
+    const { deliverableId, deliverableName, clientEmail } = req.body;
+    console.log(clientEmail )
+    const inviteToken = createAccessToken(
+      {
+        deliverableId,
+        deliverableName,
+        clientEmail
+      }
+    );
+    const CLIENT_URL = process.env.INVITE_CLIENT_URL;
+    const url = `${CLIENT_URL}/client/invite/${inviteToken}`;
+
+    // send email to multiple clients
+    clientEmail.forEach((client) => {
+      clientInviteMail({
+        email: client,
+        url,
+        DeliverableName: req.body.deliverableName,
+        inviter: req.user.name
+      });
+    });
+    res.status(200).json('invite sent');
+  },
+
+  /* check if a client already has an account,
+   log in him automatically without a password if he already has one */
+
+  async checkIfClientHasAccount(req, res) {
+    const { token } = req.params;
+    const { clientEmail, deliverableId } = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findOne({ email: clientEmail[0] });
+
+    if (!user) res.status(400).send({ error: { msg: 'client has no account' } });
+    const accessToken = createAccessToken({ id: user._id, email: user.email });
+    res.cookie('jwt', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+      maxAge: 3 * 24 * 60 * 60 * 1000
+    });
+    return res.status(201).send({ deliverableId });
   },
 
 

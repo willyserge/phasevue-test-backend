@@ -13,6 +13,8 @@ userRouter.post('/user/password_reset_email', AsyncHandler(UserController.sendRe
 userRouter.get('/token/verify/:token', AsyncHandler(UserController.verifyResetToken));
 userRouter.put('/user/password_reset', AsyncHandler(UserController.resetPassword));
 userRouter.post('/user/project/invite', auth, AsyncHandler(UserController.projectInvite));
+userRouter.post('/user/client/invite', auth, AsyncHandler(UserController.clientInvite));
+userRouter.get('/user/account-check/:token', AsyncHandler(UserController.checkIfClientHasAccount));
 
 
 export default userRouter;

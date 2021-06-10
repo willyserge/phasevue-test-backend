@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 import User from '../models/user';
 import { createAccessToken } from '../utils';
@@ -47,6 +48,28 @@ const Auth = {
       return res.status(200).json('cookie available');
     }
     return res.status(400).json('no cookie found');
+  },
+
+  async registerNewClient(req, res) {
+    const { token, name } = req.body;
+    const { clientEmail, deliverableId } = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findOne({ email: clientEmail[0] });
+
+    if (user) res.status(409).send({ error: { msg: 'email already exists' } });
+
+    const newUser = new User({ name, email: clientEmail[0], client: true });
+
+    const registeredUser = await newUser.save();
+    WelcomeMail(registeredUser.email);
+    const accessToken = createAccessToken({ id: newUser._id, email: newUser.email });
+    res.cookie('jwt', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+      maxAge
+    });
+    return res.status(201).send({ deliverableId });
   },
 
   logout(req, res) {

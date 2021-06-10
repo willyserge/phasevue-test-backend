@@ -10,12 +10,19 @@ const Comments = {
       populate: {
         path: 'commenter' // in phases, populate deliverables
       }
-    }).populate('images').sort({ createdAt: -1 });
+    }).populate('images').populate('project')
+      .sort({ createdAt: -1 });
     res.status(200).json(comments);
   },
 
   async createComments(req, res) {
-    req.body.commenter = req.user.id;
+    if (req.user.clientEmail) {
+      req.body.client = req.user.clientEmail[0];
+    } else {
+      req.body.commenter = req.user.id;
+    }
+
+
     const newComment = new Comment(req.body);
     const comment = await newComment.save();
     const DeliverableComment = await Deliverable.findOneAndUpdate(

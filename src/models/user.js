@@ -18,7 +18,6 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
       max: 1024,
       minlength: 6
     },
@@ -31,6 +30,10 @@ const userSchema = new mongoose.Schema(
     bio: {
       type: String,
       max: 1024
+    },
+    isClient: {
+      type: Boolean,
+      default: false
     }
   },
   {
