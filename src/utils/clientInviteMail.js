@@ -8,14 +8,14 @@ const clientInviteMail = ({
   const msg = {
     to: email,
     from: 'info@phasevue.com',
-    subject: 'Project invitation',
-    html:  `
+    subject: 'phasevue-review request',
+    html: `
     <div >
   <h2 style="text-align:center;">Phasevue<h2>
   <div>
-    <div  style="display: flex; justify-content: center; zlign-items: center;">
+    <div  style="display: flex; justify-content: center; align-items: center;">
        <p>
-      You have been invited by ${inviter} to review the ${deliverableName} deliverable on the ${projectName}  project
+      You have been invited by <span style="color:teal;">${inviter}</span> to review the <span style="color:teal;">${deliverableName}</span> deliverable on the <span style="color:teal;">${projectName}</span>  project
     </p>
     </div>
     
