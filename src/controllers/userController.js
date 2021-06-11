@@ -6,6 +6,7 @@ import { createAccessToken } from '../utils';
 import inviteMail from '../utils/inviteMail';
 import resetMail from '../utils/resetMail';
 import clientInviteMail from '../utils/clientInviteMail';
+import Project from '../models/project';
 
 const UserController = {
   async getAllUsers(req, res) {
@@ -90,12 +91,16 @@ const UserController = {
   },
 
   async clientInvite(req, res) {
-    const { deliverableId, deliverableName, clientEmail } = req.body;
-    console.log(clientEmail )
+    const {
+      deliverableId, deliverableName, clientEmail, projectId, projectName
+    } = req.body;
+
     const inviteToken = createAccessToken(
       {
         deliverableId,
         deliverableName,
+        projectId,
+        projectName,
         clientEmail
       }
     );
@@ -104,10 +109,12 @@ const UserController = {
 
     // send email to multiple clients
     clientEmail.forEach((client) => {
+
       clientInviteMail({
         email: client,
         url,
-        DeliverableName: req.body.deliverableName,
+        deliverableName,
+        projectName,
         inviter: req.user.name
       });
     });
@@ -119,12 +126,17 @@ const UserController = {
 
   async checkIfClientHasAccount(req, res) {
     const { token } = req.params;
-    const { clientEmail, deliverableId } = jwt.verify(token, process.env.JWT_SECRET);
+    const { clientEmail, deliverableId, projectId } = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findOne({ email: clientEmail[0] });
 
     if (!user) res.status(400).send({ error: { msg: 'client has no account' } });
     const accessToken = createAccessToken({ id: user._id, email: user.email });
+
+    await Project.updateOne(
+      { _id: projectId },
+      { $addToSet: { collaborators: [user.email], viewers: [user.email] } }
+    );
     res.cookie('jwt', accessToken, {
       httpOnly: true,
       secure: true,

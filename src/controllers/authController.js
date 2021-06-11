@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import Project from '../models/project';
 
 import User from '../models/user';
 import { createAccessToken } from '../utils';
@@ -52,7 +53,7 @@ const Auth = {
 
   async registerNewClient(req, res) {
     const { token, name } = req.body;
-    const { clientEmail, deliverableId } = jwt.verify(token, process.env.JWT_SECRET);
+    const { clientEmail, deliverableId, projectId } = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findOne({ email: clientEmail[0] });
 
@@ -61,6 +62,12 @@ const Auth = {
     const newUser = new User({ name, email: clientEmail[0], client: true });
 
     const registeredUser = await newUser.save();
+
+    // add client to project collaborators
+    await Project.updateOne(
+      { _id: projectId },
+      { $addToSet: { collaborators: [registeredUser.email], viewers: [registeredUser.email] } }
+    );
     WelcomeMail(registeredUser.email);
     const accessToken = createAccessToken({ id: newUser._id, email: newUser.email });
     res.cookie('jwt', accessToken, {
