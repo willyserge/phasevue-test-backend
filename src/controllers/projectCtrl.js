@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken';
 
 import Phase from '../models/phase';
 import Project from '../models/project';
+import newCommentMail from '../utils/newCommentMail';
+import clientClientEmail from '../utils/newClientMail';
 
 const Projects = {
 
@@ -87,13 +89,20 @@ const Projects = {
   },
 
   async addClient(req, res) {
-    const { projectId, email } = req.body;
+    const { projectId, email, projectName } = req.body;
 
     await Project.updateOne(
       { _id: projectId },
       { $addToSet: { clients: [email] } }
     );
 
+    const newClientEmailData = {
+      inviter: req.user.name,
+      clientEmail: email,
+      projectName
+    };
+
+    clientClientEmail(newClientEmailData);
     res.status(200).json('client added');
   },
 
