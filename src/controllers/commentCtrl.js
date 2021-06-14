@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import Comment from '../models/comment';
 import Deliverable from '../models/deliverable';
+import newCommentMail from '../utils/newCommentMail';
 
 const Comments = {
 
@@ -14,20 +15,24 @@ const Comments = {
       .sort({ createdAt: -1 });
     res.status(200).json(comments);
   },
+  // add new comment
 
   async createComments(req, res) {
-    if (req.user.clientEmail) {
-      req.body.client = req.user.clientEmail[0];
-    } else {
-      req.body.commenter = req.user.id;
-    }
-
-
+    const { adminEmails, deliverableName } = req.body;
+    req.body.commenter = req.user.id;
     const newComment = new Comment(req.body);
     const comment = await newComment.save();
     const DeliverableComment = await Deliverable.findOneAndUpdate(
       { _id: req.body.id }, { $push: { comments: comment._id } }, { new: true }
     );
+    const notificationData = {
+      comment: comment.body,
+      commenter: req.user.name,
+      deliverableName
+    };
+    adminEmails.forEach((email) => {
+      newCommentMail(notificationData, email);
+    });
     return res.status(201).json(DeliverableComment);
   },
 

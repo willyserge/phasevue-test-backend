@@ -69,7 +69,9 @@ const Auth = {
       { $addToSet: { collaborators: [registeredUser.email], viewers: [registeredUser.email] } }
     );
     WelcomeMail(registeredUser.email);
-    const accessToken = createAccessToken({ id: newUser._id, email: newUser.email });
+    const accessToken = createAccessToken({
+      id: newUser._id, email: newUser.email, name: newUser.name
+    });
     res.cookie('jwt', accessToken, {
       httpOnly: true,
       secure: true,
