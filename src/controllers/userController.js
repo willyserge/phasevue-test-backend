@@ -70,13 +70,13 @@ const UserController = {
   },
 
   async projectInvite(req, res) {
+    const { projectId, projectName, email } = req.body;
     const inviteToken = createAccessToken(
       {
-        projectId: req.body.projectId,
-        projectName: req.body.projectName,
-        email: req.body.email,
-        inviteAs: req.body.inviteAs,
-        inviter: req.user.names
+        projectId,
+        projectName,
+        email,
+        inviter: req.user.name
       }
     );
     const CLIENT_URL = process.env.INVITE_CLIENT_URL;
@@ -109,7 +109,6 @@ const UserController = {
 
     // send email to multiple clients
     clientEmail.forEach((client) => {
-
       clientInviteMail({
         email: client,
         url,

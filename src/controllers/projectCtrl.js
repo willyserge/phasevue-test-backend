@@ -40,12 +40,18 @@ const Projects = {
   async addUserToProject(req, res) {
     const { token } = req.params;
     const details = jwt.verify(token, process.env.JWT_SECRET);
+
+    /*
+
+    to be revisited
+
     if (details.inviteAs === 'viewer') {
       await Project.updateOne(
         { _id: details.projectId },
         { $addToSet: { collaborators: [details.email], viewers: [details.email] } }
       );
     }
+    */
 
     await Project.updateOne(
       { _id: details.projectId },
