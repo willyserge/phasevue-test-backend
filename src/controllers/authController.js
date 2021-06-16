@@ -14,6 +14,7 @@ const Auth = {
   async signup(req, res) {
     const { name, email, password } = req.body;
     const user = await User.findOne({ email });
+
     if (user) res.status(409).send({ error: { msg: 'email already exists' } });
 
     const passwordHash = await bcrypt.hash(password, 10);
