@@ -14,14 +14,15 @@ const Auth = {
   async signup(req, res) {
     const { name, email, password } = req.body;
     const user = await User.findOne({ email });
-
-    if (user) res.status(409).send({ error: { msg: 'email already exists' } });
+    if (user) {
+      return res.status(409).send({ error: { msg: 'email already exists' } });
+    }
 
     const passwordHash = await bcrypt.hash(password, 10);
     const newUser = new User({ name, email, password: passwordHash });
 
     const registeredUser = await newUser.save();
-    WelcomeMail(registeredUser.email);
+    WelcomeMail(registeredUser.email, registeredUser.name);
     const accessToken = createAccessToken({ id: newUser._id, email: newUser.email });
     return res.status(201).send({ accessToken });
   },
