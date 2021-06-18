@@ -16,6 +16,10 @@ const projectSchema = new Schema(
       type: Array,
       required: true
     },
+    verifiedCollaborators: [{
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }],
     clients: {
       type: Array,
       required: true

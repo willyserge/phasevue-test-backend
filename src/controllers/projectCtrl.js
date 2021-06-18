@@ -18,7 +18,7 @@ const Projects = {
         populate: {
           path: 'deliverables' // in phases, populate deliverables
         }
-      })
+      }).populate('verifiedCollaborators')
       .sort({ createdAt: -1 });
     res.status(200).json(projects);
   },
@@ -65,8 +65,12 @@ const Projects = {
     req.body.slug = slugify(req.body.name);
     req.body.collaborators = req.user.email;
     req.body.admins = req.user.email;
+    req.body.verifiedCollaborators= req.user.id;
+
+    console.log(req.body)
     const newProject = new Project(req.body);
     newProject.createdBy = req.user.id;
+    //newProject.verifiedCollaborators = req.user.id;
     const project = await newProject.save();
 
     const { template } = req.body;
