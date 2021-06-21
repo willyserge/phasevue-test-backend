@@ -6,16 +6,16 @@ import User from '../models/user';
 const Phases = {
 
   async createPhase(req, res) {
+    const { projectId } = req.params;
     const element = req.body.name;
     for (let i = 0; i < element.length; i++) {
-      const newPhase = new Phase({ name: element[i] });
+      const newPhase = new Phase({ name: element[i], projectId });
       const phase = await newPhase.save();
       const project = await Project.findOneAndUpdate(
-        { _id: req.params.projectId }, { $push: { phases: phase._id } }, { new: true }
+        { _id: projectId }, { $push: { phases: phase._id } }, { new: true }
       );
-      
     }
-    res.status(201).json('phases created successfully')
+    res.status(201).json('phases created successfully');
   }
 
 };

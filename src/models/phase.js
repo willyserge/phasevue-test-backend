@@ -19,7 +19,8 @@ const phaseSchema = new Schema(
     status: {
       type: String,
       default: 'incomplete'
-    }
+    },
+    projectId: { type: ObjectId, ref: 'Project' }
   },
   {
     timestamps: true

@@ -65,18 +65,15 @@ const Projects = {
     req.body.slug = slugify(req.body.name);
     req.body.collaborators = req.user.email;
     req.body.admins = req.user.email;
-    req.body.verifiedCollaborators= req.user.id;
-
-    console.log(req.body)
+    req.body.verifiedCollaborators = req.user.id;
     const newProject = new Project(req.body);
     newProject.createdBy = req.user.id;
-    //newProject.verifiedCollaborators = req.user.id;
     const project = await newProject.save();
 
     const { template } = req.body;
 
     for (let i = 0; i < template.length; i++) {
-      const newPhase = new Phase({ name: template[i] });
+      const newPhase = new Phase({ name: template[i], projectId: project._id });
       const phase = await newPhase.save();
       await Project.findOneAndUpdate(
         { _id: project._id }, { $push: { phases: phase._id } }, { new: true }
@@ -94,7 +91,8 @@ const Projects = {
 
   async deleteProject(req, res) {
     const { projectId } = req.params;
-    await Project.findByIdAndRemove(projectId);
+    const project = await Project.findByIdAndRemove(projectId);
+    await Phase.deleteMany({ projectId: project._id });
     res.status(200).json({ message: 'project deleted successfully' });
   },
 
