@@ -8,6 +8,7 @@ import LoginAttempts from '../models/loginAttempts';
 import Project from '../models/project';
 import User from '../models/user';
 import { createAccessToken } from '../utils';
+import passwordlessLoginMail from '../utils/pwLoginMail';
 import WelcomeMail from '../utils/welcomeMail';
 
 const maxAge = 3 * 24 * 60 * 60 * 1000;
@@ -96,6 +97,8 @@ const Auth = {
     const id = uuidv4();
     const newLoginAttempt = new LoginAttempt({ email, id });
     await newLoginAttempt.save();
+    const url = `${process.env.VERIFY_CLIENT_URL}/verify`;
+    passwordlessLoginMail({ email: user.email, url });
     return res.status(200).json({ success: true });
   },
 
