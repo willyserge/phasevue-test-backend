@@ -27,8 +27,7 @@ const Auth = {
 
     const registeredUser = await newUser.save();
     WelcomeMail(registeredUser.email, registeredUser.name);
-    const accessToken = createAccessToken({ id: newUser._id, email: newUser.email });
-    return res.status(201).send({ accessToken });
+    return res.status(201).json({ success: true });
   },
 
   async signin(req, res) {
@@ -48,7 +47,7 @@ const Auth = {
       sameSite: true,
       maxAge
     });
-    return res.status(200).send({ accessToken });
+    return res.status(201).json({ success: true });
   },
   checkCookie(req, res) {
     if (req.cookies.jwt) {
@@ -115,10 +114,33 @@ const Auth = {
       sameSite: true,
       maxAge
     });
-
+    // delete login id after use, link can only be used once
+    await LoginAttempt.deleteOne({ id });
     return res.status(200).json({ success: true });
   },
 
+  // passwordless register
+
+  async passwordlessRegister(req, res) {
+    const { name, email } = req.body;
+    const user = await User.findOne({ email });
+    if (user) {
+      return res.status(409).send({ error: { msg: 'email already exists' } });
+    }
+    const newUser = new User({ name, email });
+    const registeredUser = await newUser.save();
+    WelcomeMail(registeredUser.email, registeredUser.name);
+    const accessToken = createAccessToken({
+      id: registeredUser._id, email: registeredUser.email, name: registeredUser.name
+    });
+    res.cookie('jwt', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+      maxAge
+    });
+    return res.status(201).json({ success: true });
+  },
 
   logout(req, res) {
     res.clearCookie('jwt');
