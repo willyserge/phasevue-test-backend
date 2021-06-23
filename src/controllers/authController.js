@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { verify } from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import LoginAttempt from '../models/loginAttempts';
 import LoginAttempts from '../models/loginAttempts';
@@ -97,8 +97,25 @@ const Auth = {
     const id = uuidv4();
     const newLoginAttempt = new LoginAttempt({ email, id });
     await newLoginAttempt.save();
-    const url = `${process.env.VERIFY_CLIENT_URL}/verify`;
+    const url = `${process.env.VERIFY_CLIENT_URL}/verify/${id}`;
     passwordlessLoginMail({ email: user.email, url });
+    return res.status(200).json({ success: true });
+  },
+
+  async verify(req, res) {
+    const { id } = req.params;
+    const attempt = LoginAttempt.findOne({ id });
+    if (!attempt) return res.status(400).json({ error: 'invalid page' });
+    const user = await User.findOne({ email: attempt.email }).select('-password');
+
+    const accessToken = createAccessToken({ id: user._id, email: user.email, name: user.name });
+    res.cookie('jwt', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+      maxAge
+    });
+
     return res.status(200).json({ success: true });
   },
 
