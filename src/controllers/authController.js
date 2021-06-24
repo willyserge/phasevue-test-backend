@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import bcrypt from 'bcryptjs';
-import jwt, { verify } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import LoginAttempt from '../models/loginAttempts';
 import LoginAttempts from '../models/loginAttempts';

@@ -16,5 +16,6 @@ projectsRouter.delete('/project/:projectId', auth, AsyncHandler(Projects.deleteP
 projectsRouter.get('/project/invite/:token', auth, AsyncHandler(Projects.addUserToProject));
 projectsRouter.put('/projects/addClient', auth, AsyncHandler(Projects.addClient));
 projectsRouter.get('/project/clients/:projectId', auth, AsyncHandler(Projects.getProjectClients));
+projectsRouter.post('/project/invite-collaborator', auth, AsyncHandler(Projects.inviteCollaborator));
 
 export default projectsRouter;

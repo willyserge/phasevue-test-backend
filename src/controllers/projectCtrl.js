@@ -2,10 +2,14 @@
 /* eslint-disable no-underscore-dangle */
 import slugify from 'slugify';
 import jwt from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
 
 import Phase from '../models/phase';
 import Project from '../models/project';
 import clientClientEmail from '../utils/newClientMail';
+import User from '../models/user';
+import Invite from '../models/invite';
+import inviteMail from '../utils/inviteMail';
 
 const Projects = {
 
@@ -117,6 +121,39 @@ const Projects = {
     const { projectId } = req.params;
     const clients = await Project.findById(projectId).select('clients');
     res.status(200).json(clients);
+  },
+
+  // invite collaborator
+
+  async inviteCollaborator(req, res) {
+    const { projectId, projectName, email } = req.body;
+    const id = uuidv4();
+    const newInvite = new Invite({
+      email, id, projectId, projectName
+    });
+    const invite = await newInvite.save();
+    const CLIENT_URL = process.env.INVITE_CLIENT_URL;
+    const url = `${CLIENT_URL}/project/invite/${id}`;
+    inviteMail({
+      email: invite.email,
+      url,
+      projectName: invite.projectName,
+      inviter: req.user.name
+    });
+    return res.status(200).json({ success: true });
+  },
+
+  async getCollaboratorDetails(req, res) {
+    const { projectId } = req.body;
+    const collaborators = await Project.findById(projectId).select('collaborators');
+
+    const verifiedCollaborators = [];
+
+    for (let i = 0; i < collaborators.length; i++) {
+      const user = await User.findOne({ email: [i] });
+      verifiedCollaborators.push(user);
+    }
+    console.log(verifiedCollaborators);
   }
 
 
