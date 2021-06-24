@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema(
     isClient: {
       type: Boolean,
       default: false
+    },
+    isPasswordlessAuth: {
+      type: Boolean,
+      default: false
     }
   },
   {
