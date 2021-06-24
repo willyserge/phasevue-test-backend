@@ -5,7 +5,6 @@ import jwt from 'jsonwebtoken';
 
 import Phase from '../models/phase';
 import Project from '../models/project';
-import newCommentMail from '../utils/newCommentMail';
 import clientClientEmail from '../utils/newClientMail';
 
 const Projects = {
