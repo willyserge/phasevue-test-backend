@@ -14,6 +14,7 @@ projectsRouter.post('/projects/create', auth, AsyncHandler(Projects.createProjec
 projectsRouter.put('/projects/update', auth, AsyncHandler(Projects.updateProject));
 projectsRouter.delete('/project/:projectId', auth, AsyncHandler(Projects.deleteProject));
 projectsRouter.get('/project/invite/:token', auth, AsyncHandler(Projects.addUserToProject));
+projectsRouter.get('/project/verify-invite/:id', AsyncHandler(Projects.verifyInvite));
 projectsRouter.put('/projects/addClient', auth, AsyncHandler(Projects.addClient));
 projectsRouter.get('/project/clients/:projectId', auth, AsyncHandler(Projects.getProjectClients));
 projectsRouter.post('/project/invite-collaborator', auth, AsyncHandler(Projects.inviteCollaborator));

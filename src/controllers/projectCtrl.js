@@ -10,6 +10,7 @@ import clientClientEmail from '../utils/newClientMail';
 import User from '../models/user';
 import Invite from '../models/invite';
 import inviteMail from '../utils/inviteMail';
+import { createAccessToken } from '../utils';
 
 const Projects = {
 
@@ -141,6 +142,25 @@ const Projects = {
       inviter: req.user.name
     });
     return res.status(200).json({ success: true });
+  },
+
+  // verify collaborator invite
+  async verifyInvite(req, res) {
+    const { id } = req.params;
+    const invite = await Invite.findOne({ id });
+    if (!invite) return res.status(400).json({ error: 'invalid page' });
+    const user = await User.findOne({ email: invite.email }).select('-password');
+
+    if (!user) return res.status(200).json({ message: 'user does not have an account' });
+    const accessToken = createAccessToken({ id: user._id, email: user.email, name: user.name });
+    const maxAge = 3 * 24 * 60 * 60 * 1000;
+    res.cookie('jwt', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+      maxAge
+    });
+    return res.status(200).json({ message: 'user has an account' });
   },
 
   async getCollaboratorDetails(req, res) {
