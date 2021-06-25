@@ -160,7 +160,7 @@ const Projects = {
       sameSite: true,
       maxAge
     });
-    return res.status(200).json({ message: 'user has an account' });
+    return res.status(200).json({ message: 'user has an account', invite });
   },
 
   async getCollaboratorDetails(req, res) {
