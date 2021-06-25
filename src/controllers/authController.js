@@ -3,7 +3,6 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import LoginAttempt from '../models/loginAttempts';
-import LoginAttempts from '../models/loginAttempts';
 
 import Project from '../models/project';
 import User from '../models/user';
@@ -12,7 +11,6 @@ import passwordlessLoginMail from '../utils/pwLoginMail';
 import WelcomeMail from '../utils/welcomeMail';
 
 const maxAge = 3 * 24 * 60 * 60 * 1000;
-
 
 const Auth = {
   async signup(req, res) {
