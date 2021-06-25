@@ -18,5 +18,7 @@ projectsRouter.get('/project/verify-invite/:id', AsyncHandler(Projects.verifyInv
 projectsRouter.put('/projects/addClient', auth, AsyncHandler(Projects.addClient));
 projectsRouter.get('/project/clients/:projectId', auth, AsyncHandler(Projects.getProjectClients));
 projectsRouter.post('/project/invite-collaborator', auth, AsyncHandler(Projects.inviteCollaborator));
+projectsRouter.post('/project/authenticateInvitee', AsyncHandler(Projects.authenticateInvitedUser));
+
 
 export default projectsRouter;

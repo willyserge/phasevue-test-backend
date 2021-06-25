@@ -11,6 +11,9 @@ import User from '../models/user';
 import Invite from '../models/invite';
 import inviteMail from '../utils/inviteMail';
 import { createAccessToken } from '../utils';
+import WelcomeMail from '../utils/welcomeMail';
+
+const maxAge = 3 * 24 * 60 * 60 * 1000;
 
 const Projects = {
 
@@ -153,30 +156,57 @@ const Projects = {
 
     if (!user) return res.status(200).json({ message: 'user does not have an account' });
     const accessToken = createAccessToken({ id: user._id, email: user.email, name: user.name });
-    const maxAge = 3 * 24 * 60 * 60 * 1000;
     res.cookie('jwt', accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: true,
       maxAge
     });
+    // if user already has an account, add him to the project
+    await Project.updateOne(
+      { _id: invite.projectId },
+      {
+        $addToSet: {
+          verifiedCollaborators: [user._id],
+          viewers: [user.email],
+          collaborators: [user.email]
+        }
+      }
+    );
     return res.status(200).json({ message: 'user has an account', invite });
   },
 
-  async getCollaboratorDetails(req, res) {
-    const { projectId } = req.body;
-    const collaborators = await Project.findById(projectId).select('collaborators');
+  // authenticate users without accounts thought invites
 
-    const verifiedCollaborators = [];
+  async authenticateInvitedUser(req, res) {
+    const { name, id } = req.body;
+    const invite = await Invite.findOne({ id });
+    if (!invite) return res.status(400).json({ error: 'invalid page' });
+    const newUser = new User({ name, email: invite.email });
+    const registeredUser = await newUser.save();
+    WelcomeMail(registeredUser.email, registeredUser.name);
+    const accessToken = createAccessToken({
+      id: registeredUser._id, email: registeredUser.email, name: registeredUser.name
+    });
+    res.cookie('jwt', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+      maxAge
+    });
 
-    for (let i = 0; i < collaborators.length; i++) {
-      const user = await User.findOne({ email: [i] });
-      verifiedCollaborators.push(user);
-    }
-    console.log(verifiedCollaborators);
+    await Project.updateOne(
+      { _id: invite.projectId },
+      {
+        $addToSet: {
+          verifiedCollaborators: [registeredUser._id],
+          viewers: [registeredUser.email],
+          collaborators: [registeredUser.email]
+        }
+      }
+    );
+    return res.status(201).json(invite);
   }
-
-
 };
 
 export default Projects;
