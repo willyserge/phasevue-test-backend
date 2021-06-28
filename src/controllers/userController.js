@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { v4 as uuidv4 } from 'uuid';
 
 import User from '../models/user';
 import { createAccessToken } from '../utils';
@@ -7,6 +8,7 @@ import inviteMail from '../utils/inviteMail';
 import resetMail from '../utils/resetMail';
 import clientInviteMail from '../utils/clientInviteMail';
 import Project from '../models/project';
+import DeliverableInvite from '../models/deliverableInvite';
 
 const UserController = {
   async getAllUsers(req, res) {
@@ -95,29 +97,32 @@ const UserController = {
       deliverableId, deliverableName, clientEmail, projectId, projectName
     } = req.body;
 
-    const inviteToken = createAccessToken(
-      {
-        deliverableId,
-        deliverableName,
-        projectId,
-        projectName,
-        clientEmail
-      }
-    );
-    const CLIENT_URL = process.env.INVITE_CLIENT_URL;
-    const url = `${CLIENT_URL}/client/invite/${inviteToken}`;
+    const id = uuidv4();
+    const newInvite = new DeliverableInvite({
+      id,
+      deliverableId,
+      deliverableName,
+      projectId,
+      projectName,
+      clientEmails: clientEmail
+    });
+    const invite = await newInvite.save();
 
     // send email to multiple clients
-    clientEmail.forEach((client) => {
+    invite.clientEmails.forEach((email) => {
+      const CLIENT_URL = process.env.INVITE_CLIENT_URL;
+      const url = `${CLIENT_URL}/deliverable/review-request/${id}?email=${email}`;
+
       clientInviteMail({
-        email: client,
+        email,
         url,
         deliverableName,
         projectName,
         inviter: req.user.name
       });
     });
-    res.status(200).json('invite sent');
+
+    res.status(200).json('email sent');
   },
 
   /* check if a client already has an account,
