@@ -61,7 +61,6 @@ const Deliverables = {
   // verify deliverable review request
 
   async verifyReviewRequest(req, res) {
-    
     const { id } = req.params;
     const { email } = req.query;
     const deliverableInvite = await DeliverableInvite.findOne({ id, clientEmails: email });
@@ -81,7 +80,6 @@ const Deliverables = {
   // create reviewer user account upon verification
 
   async authenticateReviewer(req, res) {
-
     const { name, id, email } = req.body;
 
     const deliverableInvite = await DeliverableInvite.findOne({ id, clientEmails: email });
