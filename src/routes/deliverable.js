@@ -11,6 +11,7 @@ deliverableRouter.post('/deliverable/', auth, AsyncHandler(Deliverables.createDe
 deliverableRouter.put('/deliverable/update', auth, AsyncHandler(Deliverables.updateDeliverable));
 deliverableRouter.delete('/deliverable/:deliverableId', auth, AsyncHandler(Deliverables.deleteDeliverable));
 deliverableRouter.get('/client/invite/:token', AsyncHandler(Deliverables.grantClientDeliverableAccess));
+deliverableRouter.get('/deliverable/reviewRequest/:id', AsyncHandler(Deliverables.verifyReviewRequest));
 
 
 export default deliverableRouter;

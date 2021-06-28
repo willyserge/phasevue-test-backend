@@ -107,11 +107,12 @@ const UserController = {
       clientEmails: clientEmail
     });
     const invite = await newInvite.save();
-    const CLIENT_URL = process.env.INVITE_CLIENT_URL;
-    const url = `${CLIENT_URL}/client/invite/${id}`;
 
     // send email to multiple clients
     invite.clientEmails.forEach((email) => {
+      const CLIENT_URL = process.env.INVITE_CLIENT_URL;
+      const url = `${CLIENT_URL}/deliverable/review-request/${id}?email=${email}`;
+
       clientInviteMail({
         email,
         url,
@@ -120,6 +121,8 @@ const UserController = {
         inviter: req.user.name
       });
     });
+
+    res.status(200).json('email sent');
   },
 
   /* check if a client already has an account,

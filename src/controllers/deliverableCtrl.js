@@ -2,7 +2,10 @@
 import jwt from 'jsonwebtoken';
 
 import Deliverable from '../models/deliverable';
+import DeliverableInvite from '../models/deliverableInvite';
 import Phase from '../models/phase';
+import User from '../models/user';
+import { createAccessToken } from '../utils';
 
 const Deliverables = {
 
@@ -50,6 +53,26 @@ const Deliverables = {
       return res.status(200).json(details);
     }
     return res.status(400).json('bad request');
+  },
+
+  // verify deliverable review request
+
+  async verifyReviewRequest(req, res) {
+    const maxAge = 3 * 24 * 60 * 60 * 1000;
+    const { id } = req.params;
+    const { email } = req.query;
+    const deliverableInvite = await DeliverableInvite.findOne({ id, clientEmails: email });
+    if (!deliverableInvite) return res.status(400).json({ error: 'invalid page' });
+    const user = await User.findOne({ email }).select('-password');
+    if (!user) return res.status(200).json({ message: 'user does not have an account' });
+    const accessToken = createAccessToken({ id: user._id, email: user.email, name: user.name });
+    res.cookie('jwt', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+      maxAge
+    });
+    return res.status(200).json({ message: 'user has an account', deliverableInvite });
   }
 };
 
