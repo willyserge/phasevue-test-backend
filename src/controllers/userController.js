@@ -29,6 +29,17 @@ const UserController = {
     res.status(200).json(user);
   },
 
+  async updateNameAndEmail(req, res) {
+    console.log(req.user.email)
+    const { name, email } = req.body;
+     if (email == req.user.email) {
+       console.log(true);
+     }
+     console.log(false);
+    
+  },
+
+
   async sendResetEmail(req, res) {
     const user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(400).send({ msg: 'That user doesn’t exist' });

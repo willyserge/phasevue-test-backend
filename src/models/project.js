@@ -12,10 +12,10 @@ const projectSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Phase'
     }],
-    collaborators: {
-      type: Array,
-      required: true
-    },
+    collaborators: [{
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }],
     verifiedCollaborators: [{
       type: Schema.Types.ObjectId,
       ref: 'User'
@@ -28,16 +28,10 @@ const projectSchema = new Schema(
       type: Array,
       required: true
     },
-    admins: {
-      type: Array,
-      required: true
-    },
-    slug: {
-      type: String,
-      trim: true,
-      required: true,
-      text: true
-    },
+    admins: [{
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }],
     createdBy: { type: ObjectId, ref: 'User' }
   },
   {

@@ -15,6 +15,6 @@ userRouter.put('/user/password_reset', AsyncHandler(UserController.resetPassword
 userRouter.post('/user/project/invite', auth, AsyncHandler(UserController.projectInvite));
 userRouter.post('/user/client/invite', auth, AsyncHandler(UserController.clientInvite));
 userRouter.get('/user/account-check/:token', AsyncHandler(UserController.checkIfClientHasAccount));
-
+userRouter.put('/user/profile/update', auth, AsyncHandler(UserController.updateNameAndEmail));
 
 export default userRouter;
