@@ -139,9 +139,8 @@ const Projects = {
       { _id: invite.projectId },
       {
         $addToSet: {
-          verifiedCollaborators: [user._id],
-          viewers: [user.email],
-          collaborators: [user.email]
+          collaborators: [user._id],
+          viewers: [user._id]
         }
       }
     );
@@ -171,9 +170,8 @@ const Projects = {
       { _id: invite.projectId },
       {
         $addToSet: {
-          verifiedCollaborators: [registeredUser._id],
-          viewers: [registeredUser.email],
-          collaborators: [registeredUser.email]
+          collaborators: [registeredUser._id],
+          viewers: [registeredUser._id]
         }
       }
     );

@@ -16,18 +16,14 @@ const projectSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User'
     }],
-    verifiedCollaborators: [{
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    }],
     clients: {
       type: Array,
       required: true
     },
-    viewers: {
-      type: Array,
-      required: true
-    },
+    viewers: [{
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }],
     admins: [{
       type: Schema.Types.ObjectId,
       ref: 'User'

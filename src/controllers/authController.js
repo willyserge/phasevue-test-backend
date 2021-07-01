@@ -54,36 +54,6 @@ const Auth = {
     return res.status(400).json('no cookie found');
   },
 
-  async registerNewClient(req, res) {
-    const { token, name } = req.body;
-    const { clientEmail, deliverableId, projectId } = jwt.verify(token, process.env.JWT_SECRET);
-
-    const user = await User.findOne({ email: clientEmail[0] });
-
-    if (user) res.status(409).send({ error: { msg: 'email already exists' } });
-
-    const newUser = new User({ name, email: clientEmail[0], client: true });
-
-    const registeredUser = await newUser.save();
-
-    // add client to project collaborators
-    await Project.updateOne(
-      { _id: projectId },
-      { $addToSet: { collaborators: [registeredUser.email], viewers: [registeredUser.email] } }
-    );
-    WelcomeMail(registeredUser.email);
-    const accessToken = createAccessToken({
-      id: newUser._id, email: newUser.email, name: newUser.name
-    });
-    res.cookie('jwt', accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: true,
-      maxAge
-    });
-    return res.status(201).send({ deliverableId });
-  },
-
   // passwordless authentication start
 
   async identify(req, res) {
