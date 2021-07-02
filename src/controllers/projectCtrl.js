@@ -1,7 +1,5 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-underscore-dangle */
-import slugify from 'slugify';
-import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 
 import Phase from '../models/phase';
@@ -19,13 +17,13 @@ const Projects = {
 
   async getAllProjects(req, res) {
     const projects = await Project
-      .find({ collaborators: req.user.email })
+      .find({ collaborators: req.user.id })
       .populate({
         path: 'phases', // populate phases
         populate: {
           path: 'deliverables' // in phases, populate deliverables
         }
-      }).populate('verifiedCollaborators')
+      }).populate('collaborators')
       .sort({ createdAt: -1 });
     res.status(200).json(projects);
   },
@@ -44,35 +42,9 @@ const Projects = {
     res.status(200).json(project);
   },
 
-  async addUserToProject(req, res) {
-    const { token } = req.params;
-    const details = jwt.verify(token, process.env.JWT_SECRET);
-
-    /*
-
-    to be revisited
-
-    if (details.inviteAs === 'viewer') {
-      await Project.updateOne(
-        { _id: details.projectId },
-        { $addToSet: { collaborators: [details.email], viewers: [details.email] } }
-      );
-    }
-    */
-
-    await Project.updateOne(
-      { _id: details.projectId },
-      { $addToSet: { collaborators: [details.email], admin: [details.email] } }
-    );
-
-    return res.status(200).json(details);
-  },
-
   async createProject(req, res) {
-    req.body.slug = slugify(req.body.name);
-    req.body.collaborators = req.user.email;
-    req.body.admins = req.user.email;
-    req.body.verifiedCollaborators = req.user.id;
+    req.body.collaborators = req.user.id;
+    req.body.admins = req.user.id;
     const newProject = new Project(req.body);
     newProject.createdBy = req.user.id;
     const project = await newProject.save();
@@ -167,9 +139,8 @@ const Projects = {
       { _id: invite.projectId },
       {
         $addToSet: {
-          verifiedCollaborators: [user._id],
-          viewers: [user.email],
-          collaborators: [user.email]
+          collaborators: [user._id],
+          viewers: [user._id]
         }
       }
     );
@@ -199,9 +170,8 @@ const Projects = {
       { _id: invite.projectId },
       {
         $addToSet: {
-          verifiedCollaborators: [registeredUser._id],
-          viewers: [registeredUser.email],
-          collaborators: [registeredUser.email]
+          collaborators: [registeredUser._id],
+          viewers: [registeredUser._id]
         }
       }
     );
