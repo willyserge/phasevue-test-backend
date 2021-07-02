@@ -54,9 +54,9 @@ const UserController = {
 
   async updateEmail(req, res) {
     const { email } = req.body;
-    if (req.user.email === email) return res.status(400).json({ message: 'same information' });
+    if (req.user.email === email) return res.status(400).json({ error: { msg: 'enter a different email' } });
     const user = await User.findOne({ email });
-    if (user) return res.status(409).send({ error: { msg: 'email already in use' } });
+    if (user) return res.status(409).json({ error: { msg: 'email already in use' } });
     const newUserData = await User.findByIdAndUpdate(req.user.id, { email }, { new: true });
     const accessToken = createAccessToken({
       id: newUserData._id,
