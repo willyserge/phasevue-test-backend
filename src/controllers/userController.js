@@ -10,6 +10,8 @@ import clientInviteMail from '../utils/clientInviteMail';
 import Project from '../models/project';
 import DeliverableInvite from '../models/deliverableInvite';
 
+const maxAge = 3 * 24 * 60 * 60 * 1000;
+
 const UserController = {
   async getAllUsers(req, res) {
     const users = await User.find().select('-password');
@@ -29,14 +31,45 @@ const UserController = {
     res.status(200).json(user);
   },
 
-  async updateNameAndEmail(req, res) {
-    console.log(req.user.email)
-    const { name, email } = req.body;
-     if (email == req.user.email) {
-       console.log(true);
-     }
-     console.log(false);
-    
+  async updateName(req, res) {
+    const { name } = req.body;
+    await User.findByIdAndUpdate(req.user.id, {
+      name
+    }, { new: true });
+    res.status(200).json({ message: 'success' });
+  },
+
+  async updatePassword(req, res) {
+    const { password, newPassword } = req.body;
+    const user = await User.findOne({ email: req.user.email });
+    const isMatch = await bcrypt.compare(password, user.password);
+    // check if password matches
+    if (!isMatch) return res.status(400).send({ msg: 'Current password is incorrect.' });
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+    await User.findByIdAndUpdate(req.user.id, {
+      password: passwordHash
+    }, { new: true });
+    return res.status(200).json({ message: 'success' });
+  },
+
+  async updateEmail(req, res) {
+    const { email } = req.body;
+    if (req.user.email === email) return res.status(400).json({ error: { msg: 'enter a different email' } });
+    const user = await User.findOne({ email });
+    if (user) return res.status(409).json({ error: { msg: 'email already in use' } });
+    const newUserData = await User.findByIdAndUpdate(req.user.id, { email }, { new: true });
+    const accessToken = createAccessToken({
+      id: newUserData._id,
+      email: newUserData.email,
+      name: newUserData.name
+    });
+    res.cookie('jwt', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+      maxAge
+    });
+    return res.status(200).json({ message: newUserData });
   },
 
 
@@ -156,7 +189,7 @@ const UserController = {
       httpOnly: true,
       secure: true,
       sameSite: true,
-      maxAge: 3 * 24 * 60 * 60 * 1000
+      maxAge
     });
     return res.status(201).send({ deliverableId });
   },

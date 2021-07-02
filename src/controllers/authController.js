@@ -1,10 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
-import LoginAttempt from '../models/loginAttempts';
 
-import Project from '../models/project';
+import LoginAttempt from '../models/loginAttempts';
 import User from '../models/user';
 import { createAccessToken } from '../utils';
 import passwordlessLoginMail from '../utils/pwLoginMail';
