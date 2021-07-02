@@ -33,10 +33,23 @@ const UserController = {
 
   async updateName(req, res) {
     const { name } = req.body;
-    const user = await User.findByIdAndUpdate(req.user.id, {
+    await User.findByIdAndUpdate(req.user.id, {
       name
     }, { new: true });
-    res.status(200).json(user);
+    res.status(200).json({ message: 'success' });
+  },
+
+  async updatePassword(req, res) {
+    const { password, newPassword } = req.body;
+    const user = await User.findOne({ email: req.user.email });
+    const isMatch = await bcrypt.compare(password, user.password);
+    // check if password matches
+    if (!isMatch) return res.status(400).send({ msg: 'Current password is incorrect.' });
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+    await User.findByIdAndUpdate(req.user.id, {
+      password: passwordHash
+    }, { new: true });
+    return res.status(200).json({ message: 'success' });
   },
 
   async updateEmail(req, res) {

@@ -17,5 +17,6 @@ userRouter.post('/user/client/invite', auth, AsyncHandler(UserController.clientI
 userRouter.get('/user/account-check/:token', AsyncHandler(UserController.checkIfClientHasAccount));
 userRouter.put('/user/profile/updateEmail', auth, AsyncHandler(UserController.updateEmail));
 userRouter.put('/user/profile/updateName', auth, AsyncHandler(UserController.updateName));
+userRouter.put('/user/profile/updatePassword', auth, AsyncHandler(UserController.updatePassword));
 
 export default userRouter;
