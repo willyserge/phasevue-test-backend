@@ -10,6 +10,8 @@ import clientInviteMail from '../utils/clientInviteMail';
 import Project from '../models/project';
 import DeliverableInvite from '../models/deliverableInvite';
 
+const maxAge = 3 * 24 * 60 * 60 * 1000;
+
 const UserController = {
   async getAllUsers(req, res) {
     const users = await User.find().select('-password');
@@ -29,14 +31,32 @@ const UserController = {
     res.status(200).json(user);
   },
 
-  async updateNameAndEmail(req, res) {
-    console.log(req.user.email)
-    const { name, email } = req.body;
-     if (email == req.user.email) {
-       console.log(true);
-     }
-     console.log(false);
-    
+  async updateName(req, res) {
+    const { name } = req.body;
+    const user = await User.findByIdAndUpdate(req.user.id, {
+      name
+    }, { new: true });
+    res.status(200).json(user);
+  },
+
+  async updateEmail(req, res) {
+    const { email } = req.body;
+    if (req.user.email === email) return res.status(400).json({ message: 'same information' });
+    const user = await User.findOne({ email });
+    if (user) return res.status(409).send({ error: { msg: 'email already in use' } });
+    const newUserData = await User.findByIdAndUpdate(req.user.id, { email }, { new: true });
+    const accessToken = createAccessToken({
+      id: newUserData._id,
+      email: newUserData.email,
+      name: newUserData.name
+    });
+    res.cookie('jwt', accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: true,
+      maxAge
+    });
+    return res.status(200).json({ message: newUserData });
   },
 
 
@@ -156,7 +176,7 @@ const UserController = {
       httpOnly: true,
       secure: true,
       sameSite: true,
-      maxAge: 3 * 24 * 60 * 60 * 1000
+      maxAge
     });
     return res.status(201).send({ deliverableId });
   },
