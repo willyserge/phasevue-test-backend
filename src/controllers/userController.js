@@ -25,7 +25,10 @@ const UserController = {
   },
 
   async userAgentInfo(req, res) {
-    const info = await UserAgent.find({ user: req.user.id });
+    const info = await UserAgent
+      .find({ user: req.user.id })
+      .limit(5)
+      .sort([['createdAt', 'desc']]);
     res.status(200).json(info);
   },
 

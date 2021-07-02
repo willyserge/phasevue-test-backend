@@ -31,16 +31,16 @@ const Auth = {
 
   async signin(req, res) {
     const { email, password } = req.body;
-    const source = req.headers['user-agent'];
-    const { browser, os } = useragent.parse(source);
-
-    const ipAddress = ip.address();
 
     const user = await User.findOne({ email });
     if (!user) return res.status(400).send({ msg: 'User does not exist.' });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).send({ msg: 'Incorrect password.' });
+
+    const source = req.headers['user-agent'];
+    const { browser, os } = useragent.parse(source);
+    const ipAddress = ip.address();
 
     const newUserAgent = new UserAgent({
       loginType: 'Credentials login',
@@ -89,6 +89,21 @@ const Auth = {
     const attempt = await LoginAttempt.findOne({ id });
     if (!attempt) return res.status(400).json({ error: 'invalid page' });
     const user = await User.findOne({ email: attempt.email }).select('-password');
+
+    const source = req.headers['user-agent'];
+    const { browser, os } = useragent.parse(source);
+    const ipAddress = ip.address();
+
+    const newUserAgent = new UserAgent({
+      loginType: 'Passwordless login',
+      ip: ipAddress,
+      client: {
+        os,
+        browser
+      },
+      user: user._id
+    });
+    await newUserAgent.save();
 
     const accessToken = createAccessToken({ id: user._id, email: user.email, name: user.name });
     res.cookie('jwt', accessToken, {
