@@ -9,6 +9,7 @@ import resetMail from '../utils/resetMail';
 import clientInviteMail from '../utils/clientInviteMail';
 import Project from '../models/project';
 import DeliverableInvite from '../models/deliverableInvite';
+import UserAgent from '../models/userAgent';
 
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 
@@ -21,6 +22,11 @@ const UserController = {
   async userInfo(req, res) {
     const user = await User.findById(req.user.id).select('-password');
     res.status(200).json(user);
+  },
+
+  async userAgentInfo(req, res) {
+    const info = await UserAgent.find({ user: req.user.id });
+    res.status(200).json(info);
   },
 
   async updateProfilePicture(req, res) {

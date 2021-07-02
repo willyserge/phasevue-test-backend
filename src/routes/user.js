@@ -8,6 +8,7 @@ const userRouter = express.Router();
 
 userRouter.get('/users', auth, AsyncHandler(UserController.getAllUsers));
 userRouter.get('/user/user_info', auth, AsyncHandler(UserController.userInfo));
+userRouter.get('/user/user_agent_info', auth, AsyncHandler(UserController.userAgentInfo));
 userRouter.put('/user/profilePicture/update', auth, AsyncHandler(UserController.updateProfilePicture));
 userRouter.post('/user/password_reset_email', AsyncHandler(UserController.sendResetEmail));
 userRouter.get('/token/verify/:token', AsyncHandler(UserController.verifyResetToken));

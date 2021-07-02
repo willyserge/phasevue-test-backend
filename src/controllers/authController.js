@@ -1,12 +1,15 @@
 /* eslint-disable no-underscore-dangle */
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
+import useragent from 'express-useragent';
+import ip from 'ip';
 
 import LoginAttempt from '../models/loginAttempts';
 import User from '../models/user';
 import { createAccessToken } from '../utils';
 import passwordlessLoginMail from '../utils/pwLoginMail';
 import WelcomeMail from '../utils/welcomeMail';
+import UserAgent from '../models/userAgent';
 
 const maxAge = 3 * 24 * 60 * 60 * 1000;
 
@@ -28,6 +31,10 @@ const Auth = {
 
   async signin(req, res) {
     const { email, password } = req.body;
+    const source = req.headers['user-agent'];
+    const { browser, os } = useragent.parse(source);
+
+    const ipAddress = ip.address();
 
     const user = await User.findOne({ email });
     if (!user) return res.status(400).send({ msg: 'User does not exist.' });
@@ -35,6 +42,16 @@ const Auth = {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).send({ msg: 'Incorrect password.' });
 
+    const newUserAgent = new UserAgent({
+      loginType: 'Credentials login',
+      ip: ipAddress,
+      client: {
+        os,
+        browser
+      },
+      user: user._id
+    });
+    await newUserAgent.save();
     // If login success , create access token and cookie
     const accessToken = createAccessToken({ id: user._id, email: user.email, name: user.name });
     res.cookie('jwt', accessToken, {
