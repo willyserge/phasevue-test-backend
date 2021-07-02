@@ -177,7 +177,6 @@ const UserController = {
     const { clientEmail, deliverableId, projectId } = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findOne({ email: clientEmail[0] });
-
     if (!user) res.status(400).send({ error: { msg: 'client has no account' } });
     const accessToken = createAccessToken({ id: user._id, email: user.email });
 
