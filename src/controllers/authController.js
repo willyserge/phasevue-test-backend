@@ -87,7 +87,7 @@ const Auth = {
   async verify(req, res) {
     const { id } = req.params;
     const attempt = await LoginAttempt.findOne({ id });
-    if (!attempt) return res.status(400).json({ error: 'invalid page' });
+    if (!attempt) return res.status(400).json({ error: 'invalid request' });
     const user = await User.findOne({ email: attempt.email }).select('-password');
 
     const source = req.headers['user-agent'];
